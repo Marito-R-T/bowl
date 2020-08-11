@@ -1,0 +1,51 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.mycompany.bowl.AperturaArchivos;
+
+import com.mycompany.bowl.GUI.BowlGUI;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.swing.JFileChooser;
+
+/**
+ *
+ * @author mari2bar
+ */
+public class AperturaTexto {
+    
+    private final JFileChooser choser;
+
+    public AperturaTexto() {
+        choser = new JFileChooser();
+    }
+    
+    public File abrirTexto(BowlGUI bowl){
+        if(choser.showOpenDialog(bowl) == JFileChooser.APPROVE_OPTION){
+            return choser.getSelectedFile();
+        }
+        return null;
+    }
+    
+    public String leerArchivo(File file){
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String s1, s2 = "";
+            while((s1=reader.readLine())!=null){
+                s2+=s1+"\n";
+            }
+            return s2;
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex);
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+        return null;
+    }
+    
+}

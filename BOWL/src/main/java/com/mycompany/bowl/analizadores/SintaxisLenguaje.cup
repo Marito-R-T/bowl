@@ -1,0 +1,156 @@
+package com.mycompany.bowl.analizadores;
+
+import java_cup.runtime.*;
+
+class SintaxisLenguajes;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+    }
+
+    public Symbol getS(){
+        System.out.println(this.s);
+        return this.s;
+    }
+:};
+
+
+terminal or, nom, version, autor, lanzamiento, extension, term, no, result;
+terminal llavea, llavec, y, pord, coma, igual, corchetea, corchetec, parentesisa, parentesisc;
+terminal mas, mult, menos, div, percent, puntocoma, dosp, lin, tab, esp, comilla, pre, punto;
+terminal caracter, idt, idn, number, codigo, nombre, pp, id, dpp, printf;
+
+non terminal S, INFO, INFOP, VR, COD, EXP, EXPP, REG, RC, RCP, TER, T;
+non terminal TP, N, PROD, PRODP, PR, TE, NO, SEM, RES, OP, OPP;
+non terminal O, ID, CODP, REGP;
+
+start with S;
+
+S ::= INFO pp COD pp EXP pp TER PROD
+;
+
+INFO ::= INFO INFOP
+    | INFOP
+;
+
+INFOP ::= nombre dosp nom puntocoma
+    | version dosp VR puntocoma
+    | autor dosp nom puntocoma
+    | lanzamiento dosp number puntocoma
+    | extension dosp idt puntocoma
+;
+
+VR ::= number
+    | number punto VR
+;
+
+EXP ::= EXP EXPP
+    | EXPP
+;
+
+EXPP ::= ID igual REG puntocoma
+;
+
+REG ::= REG pre
+    | REG mas
+    | REG mult
+    | REG REGP
+    | REGP
+    | REG or REGP
+;
+
+REGP ::= comilla nom comilla
+    | corchetea RC corchetec
+    | parentesisa REG parentesisc
+    | corchetea REG corchetec
+    | punto
+;
+
+RC ::= RC RCP
+    | RCP
+;
+
+RCP ::= lin
+    | tab
+    | esp
+    | number menos number
+    | caracter menos caracter
+;
+
+TER ::= TER N
+    | TER T
+    | N
+    | T
+;
+
+T ::= term ID TP
+;
+
+TP ::= coma ID TP 
+    | puntocoma
+;
+
+N ::= no term ID TP
+;
+
+PROD ::= PROD PRODP
+    PRODP
+;
+
+PRODP ::= idn dpp PR
+;
+
+PR ::= TE PR
+    | NO PR
+    | SEM puntocoma
+    | puntocoma
+;
+
+TE ::= idt dosp ID
+    | idt
+;
+
+NO ::= idn
+    | idn dosp ID
+;
+
+SEM ::= llavea RES llavec
+;
+
+RES ::= result igual OP puntocoma
+    | printf parentesisa comilla COD pord comilla coma ID parentesisc puntocoma
+;
+
+OP ::= OP mas OPP
+    | OP menos OPP
+    | OPP
+;
+
+OPP ::= OPP mult O
+    | OPP div O
+    | O
+;
+
+O ::= number
+    | parentesisa OP parentesisc
+;
+
+ID ::= id
+    | idt
+    | idn
+;
+
+COD ::= COD CODP
+    | CODP
+;
+CODP ::= or| nom| version| autor| lanzamiento| extension| term| no| result
+    | llavea| llavec| y| coma| igual| corchetea| corchetec| parentesisa| parentesisc
+    | mas| mult| menos| div| percent| puntocoma| dosp| lin| tab| esp| comilla| pre| punto
+    | caracter| idt| idn| number| codigo| nombre| id| dpp
+;

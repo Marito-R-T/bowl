@@ -1,0 +1,59 @@
+S -> INFO pp COD pp EXP pp TER PROD
+INFO -> INFO INFOP
+INFO -> INFOP
+INFOP -> nombre dosp id pc
+INFOP -> version dosp vr pc
+INFOP -> autor dosp nom pc
+INFOP -> lanzamiento dosp num pc
+INFOP -> extension dosp id
+COD -> cod
+EXP -> EXP EXPP
+EXP -> EXPP
+EXPP -> id ig REG pc
+REG -> com nom com
+REG -> cor RC cor
+REG -> REG pre
+REG -> REG mul
+REG -> REG mas
+REG -> REG REG
+REG -> REG or REG
+REG -> par REGP par
+REG -> cor REGP cor
+REG -> punto
+RC -> RC RCP
+    | RCP
+RCP -> nlin
+RCP -> tab
+RCP -> esp
+RCP -> num gui num
+RCP -> car gui car
+TER -> TER N
+TER -> TER T
+TER -> T
+TER -> N
+T -> terminal id TP
+TP -> , id TP
+TP -> ;
+N -> no terminal id TP
+PROD -> PROD PRODP
+PROD -> PRODP
+PRODP -> id dpp PR
+PR -> TE PR
+PR -> NO PR
+PR -> SEM pc
+PR -> pc
+TE -> id 
+TE -> id dosp id
+NO -> idt
+NO -> idt dosp id
+SEM -> lla RES llac
+RES -> result ig OP pc
+RES -> printf para com nom pord com cm id parc pc
+OP -> OP + OPP
+OP -> OP - OPP
+OP -> OPP
+OPP -> OPP * O
+OPP -> OPP / O
+OPP -> O
+O -> num
+O -> para OP parc
