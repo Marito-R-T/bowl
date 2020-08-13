@@ -8,7 +8,6 @@ package com.mycompany.bowl.GUI;
 import com.mycompany.bowl.AperturaArchivos.AperturaTexto;
 import java.io.File;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
 /**

@@ -10,5 +10,15 @@ package com.mycompany.bowl.backend.lenguaje;
  * @author moise
  */
 public class Lenguaje {
+    
    private InfoLenguaje info; 
+
+    public InfoLenguaje getInfo() {
+        return info;
+    }
+
+    public void setInfo(InfoLenguaje info) {
+        this.info = info;
+    }
+   
 }

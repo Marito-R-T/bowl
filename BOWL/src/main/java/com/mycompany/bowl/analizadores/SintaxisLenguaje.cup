@@ -1,6 +1,7 @@
 package com.mycompany.bowl.analizadores;
 
 import java_cup.runtime.*;
+import com.mycompany.bowl.backend.lenguaje.*;
 
 class SintaxisLenguajes;
 
@@ -21,33 +22,37 @@ parser code
 :};
 
 
-terminal or, nom, version, autor, lanzamiento, extension, term, no, result;
+terminal or, version, autor, lanzamiento, extension, term, no, result;
 terminal llavea, llavec, y, pord, coma, igual, corchetea, corchetec, parentesisa, parentesisc;
 terminal mas, mult, menos, div, percent, puntocoma, dosp, lin, tab, esp, comilla, pre, punto;
-terminal caracter, idt, idn, number, codigo, nombre, pp, id, dpp, printf;
+terminal caracter, idn, codigo, nombre, pp, id, dpp, printf;
+terminal String nom, number, idt;
 
-non terminal S, INFO, INFOP, VR, COD, EXP, EXPP, REG, RC, RCP, TER, T;
+non terminal Lenguaje S;
+non terminal InfoLenguaje INFO, INFOP;
+non terminal String VR;
+non terminal COD, EXP, EXPP, REG, RC, RCP, TER, T;
 non terminal TP, N, PROD, PRODP, PR, TE, NO, SEM, RES, OP, OPP;
 non terminal O, ID, CODP, REGP;
 
 start with S;
 
-S ::= INFO pp COD pp EXP pp TER PROD
+S ::= INFO:e1 pp COD pp EXP pp TER PROD {:Lenguaje lenguaje = new Lenguaje(); lenguaje.setInfo(e1); RESULT = lenguaje;:}
 ;
 
-INFO ::= INFO INFOP
-    | INFOP
+INFO ::= INFO:e1 INFOP:e2 {:e1.ingresarDato(e2); RESULT = e1;:}
+    | INFOP:e1 {:RESULT = e1;:}
 ;
 
-INFOP ::= nombre dosp nom puntocoma
-    | version dosp VR puntocoma
-    | autor dosp nom puntocoma
-    | lanzamiento dosp number puntocoma
-    | extension dosp idt puntocoma
+INFOP ::= nombre dosp nom:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setNombre(e1); RESULT = info;:}
+    | version dosp VR:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setVersion(e1); RESULT = info;:}
+    | autor dosp nom:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setAutor(e1); RESULT = info;:}
+    | lanzamiento dosp number:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setLanzamiento(Integer.parseInt(e1)); RESULT = info;:}
+    | extension dosp idt:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setExtension(e1); RESULT = info;:}
 ;
 
-VR ::= number
-    | number punto VR
+VR ::= number:e1 {:RESULT = e1;:}
+    | number:e1 punto VR:e2 {:RESULT = e1+e2;:}
 ;
 
 EXP ::= EXP EXPP

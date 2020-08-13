@@ -54,4 +54,24 @@ public class InfoLenguaje {
         return lanzamiento;
     }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
+
+    public void setLanzamiento(Integer lanzamiento) {
+        this.lanzamiento = lanzamiento;
+    }
+
 }

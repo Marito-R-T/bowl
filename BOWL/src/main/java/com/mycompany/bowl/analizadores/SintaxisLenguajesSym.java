@@ -8,55 +8,54 @@ package com.mycompany.bowl.analizadores;
 /** CUP generated class containing symbol constants. */
 public class SintaxisLenguajesSym {
   /* terminals */
-  public static final int percent = 25;
-  public static final int printf = 43;
-  public static final int comilla = 31;
-  public static final int idn = 36;
-  public static final int lin = 28;
-  public static final int lanzamiento = 6;
-  public static final int coma = 15;
-  public static final int igual = 16;
-  public static final int pp = 40;
-  public static final int caracter = 34;
-  public static final int llavec = 12;
-  public static final int llavea = 11;
-  public static final int result = 10;
-  public static final int extension = 7;
-  public static final int menos = 23;
+  public static final int percent = 24;
+  public static final int printf = 40;
+  public static final int comilla = 30;
+  public static final int idn = 34;
+  public static final int lin = 27;
+  public static final int lanzamiento = 5;
+  public static final int coma = 14;
+  public static final int igual = 15;
+  public static final int pp = 37;
+  public static final int caracter = 33;
+  public static final int llavec = 11;
+  public static final int llavea = 10;
+  public static final int result = 9;
+  public static final int extension = 6;
+  public static final int menos = 22;
   public static final int EOF = 0;
-  public static final int dosp = 27;
-  public static final int mas = 21;
-  public static final int parentesisc = 20;
-  public static final int nombre = 39;
+  public static final int dosp = 26;
+  public static final int mas = 20;
+  public static final int parentesisc = 19;
+  public static final int nombre = 36;
   public static final int error = 1;
-  public static final int parentesisa = 19;
-  public static final int term = 8;
+  public static final int parentesisa = 18;
+  public static final int term = 7;
   public static final int or = 2;
-  public static final int esp = 30;
-  public static final int punto = 33;
-  public static final int autor = 5;
-  public static final int id = 41;
-  public static final int dpp = 42;
-  public static final int y = 13;
-  public static final int mult = 22;
-  public static final int pre = 32;
-  public static final int corchetec = 18;
-  public static final int codigo = 38;
-  public static final int puntocoma = 26;
-  public static final int corchetea = 17;
-  public static final int pord = 14;
-  public static final int tab = 29;
-  public static final int nom = 3;
-  public static final int version = 4;
-  public static final int div = 24;
-  public static final int no = 9;
-  public static final int number = 37;
-  public static final int idt = 35;
+  public static final int esp = 29;
+  public static final int punto = 32;
+  public static final int autor = 4;
+  public static final int id = 38;
+  public static final int dpp = 39;
+  public static final int y = 12;
+  public static final int mult = 21;
+  public static final int pre = 31;
+  public static final int corchetec = 17;
+  public static final int codigo = 35;
+  public static final int puntocoma = 25;
+  public static final int corchetea = 16;
+  public static final int pord = 13;
+  public static final int tab = 28;
+  public static final int nom = 41;
+  public static final int version = 3;
+  public static final int div = 23;
+  public static final int no = 8;
+  public static final int idt = 43;
+  public static final int number = 42;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "or",
-  "nom",
   "version",
   "autor",
   "lanzamiento",
@@ -88,15 +87,16 @@ public class SintaxisLenguajesSym {
   "pre",
   "punto",
   "caracter",
-  "idt",
   "idn",
-  "number",
   "codigo",
   "nombre",
   "pp",
   "id",
   "dpp",
-  "printf"
+  "printf",
+  "nom",
+  "number",
+  "idt"
   };
 }
 
