@@ -10,6 +10,7 @@ parser code
     private Symbol s;
     
     public void syntax_error(Symbol s){
+        System.out.println("linea: "+s.line);
     }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{

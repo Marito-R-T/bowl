@@ -28,6 +28,16 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Ejecutar"/>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="itemCargarLenguaje">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Cargar Lenguaje"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemCargarLenguajeActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="menuVer">
           <Properties>

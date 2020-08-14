@@ -6,7 +6,13 @@
 package com.mycompany.bowl.GUI;
 
 import com.mycompany.bowl.AperturaArchivos.AperturaTexto;
+import com.mycompany.bowl.analizadores.LexicoLenguaje;
+import com.mycompany.bowl.analizadores.SintaxisLenguajes;
+import com.mycompany.bowl.backend.lenguaje.Lenguaje;
 import java.io.File;
+import java.io.StringReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
@@ -44,6 +50,7 @@ public class BowlGUI extends javax.swing.JFrame {
         itemAbrir = new javax.swing.JMenuItem();
         menuLenguajes = new javax.swing.JMenu();
         menuEjecutar = new javax.swing.JMenu();
+        itemCargarLenguaje = new javax.swing.JMenuItem();
         menuVer = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -90,6 +97,15 @@ public class BowlGUI extends javax.swing.JFrame {
         jMenuBar1.add(menuLenguajes);
 
         menuEjecutar.setText("Ejecutar");
+
+        itemCargarLenguaje.setText("Cargar Lenguaje");
+        itemCargarLenguaje.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemCargarLenguajeActionPerformed(evt);
+            }
+        });
+        menuEjecutar.add(itemCargarLenguaje);
+
         jMenuBar1.add(menuEjecutar);
 
         menuVer.setText("Ver");
@@ -115,7 +131,7 @@ public class BowlGUI extends javax.swing.JFrame {
 
     private void itemAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemAbrirActionPerformed
         // TODO add your handling code here:
-        File file = apertura.abrirTexto(this);
+        File file = apertura.abrirTexto(this, "len");
         if(file != null && file.exists()){
             String texto = apertura.leerArchivo(file);
             JScrollPane pane = new JScrollPane();
@@ -124,13 +140,27 @@ public class BowlGUI extends javax.swing.JFrame {
             NumeroLinea linea = new NumeroLinea(area);
             pane.setViewportView(area);
             pane.setRowHeaderView(linea);
-            tabbedTexto.addTab(file.getName(), pane);
+            
+            tabbedTexto.addTab(file.getName(),null, pane, file.getPath());
         }
     }//GEN-LAST:event_itemAbrirActionPerformed
+
+    private void itemCargarLenguajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCargarLenguajeActionPerformed
+        try {
+            // TODO add your handling code here:
+            String s = apertura.leerTexto(tabbedTexto.getToolTipTextAt(tabbedTexto.getSelectedIndex()));
+            SintaxisLenguajes lenguajes = new SintaxisLenguajes(new LexicoLenguaje(new StringReader(s)));
+            Lenguaje len = (Lenguaje) lenguajes.parse().value;
+            System.out.println(len.getInfo().getAutor());
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+    }//GEN-LAST:event_itemCargarLenguajeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem itemAbrir;
+    private javax.swing.JMenuItem itemCargarLenguaje;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JLabel lblColFil;
     private javax.swing.JLabel lblSeleccionado;
