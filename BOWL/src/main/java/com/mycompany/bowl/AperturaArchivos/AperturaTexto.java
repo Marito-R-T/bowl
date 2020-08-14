@@ -61,7 +61,7 @@ public class AperturaTexto {
             reader = new BufferedReader(new FileReader(file));
             String s1="", s2;
             while((s2=reader.readLine())!=null){
-                s1+=s2;
+                s1+=s2+"\n";
             }
             reader.close();
             return s1;

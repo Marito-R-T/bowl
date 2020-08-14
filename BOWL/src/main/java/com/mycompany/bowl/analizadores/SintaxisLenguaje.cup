@@ -10,10 +10,11 @@ parser code
     private Symbol s;
     
     public void syntax_error(Symbol s){
-        System.out.println("linea: "+s.line);
+        System.out.println("letra: "+s.value +"  linea: "+(s.right+1) +"  columna: "+(s.left+1) +  " Simbolo: "+s.sym);
     }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+        System.out.println("letra: "+s.value +"  linea: "+(s.right+1) +"  columna: "+(s.left+1) + " Simbolo: "+s.sym);
     }
 
     public Symbol getS(){
@@ -26,15 +27,15 @@ parser code
 terminal or, version, autor, lanzamiento, extension, term, no, result;
 terminal llavea, llavec, y, pord, coma, igual, corchetea, corchetec, parentesisa, parentesisc;
 terminal mas, mult, menos, div, percent, puntocoma, dosp, lin, tab, esp, comilla, pre, punto;
-terminal caracter, idn, codigo, nombre, pp, id, dpp, printf;
-terminal String nom, number, idt;
+terminal codigo, nom, pp, dpp, printf, str;
+terminal String number, idt, id, idn, caracterma, caracterme;
 
 non terminal Lenguaje S;
 non terminal InfoLenguaje INFO, INFOP;
-non terminal String VR;
+non terminal String VR, NOM, ID, IDT, IDN;
 non terminal COD, EXP, EXPP, REG, RC, RCP, TER, T;
-non terminal TP, N, PROD, PRODP, PR, TE, NO, SEM, RES, OP, OPP;
-non terminal O, ID, CODP, REGP;
+non terminal TPT, TPN, N, PROD, PRODP, PR, TE, NO, SEM, RES, OP, OPP;
+non terminal O, CODP, REGP;
 
 start with S;
 
@@ -45,9 +46,9 @@ INFO ::= INFO:e1 INFOP:e2 {:e1.ingresarDato(e2); RESULT = e1;:}
     | INFOP:e1 {:RESULT = e1;:}
 ;
 
-INFOP ::= nombre dosp nom:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setNombre(e1); RESULT = info;:}
+INFOP ::= nom dosp NOM:e1 puntocoma {:System.out.println(e1); InfoLenguaje info = new InfoLenguaje(); info.setNombre(e1);RESULT = info;:}
     | version dosp VR:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setVersion(e1); RESULT = info;:}
-    | autor dosp nom:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setAutor(e1); RESULT = info;:}
+    | autor dosp NOM:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setAutor(e1); RESULT = info;:}
     | lanzamiento dosp number:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setLanzamiento(Integer.parseInt(e1)); RESULT = info;:}
     | extension dosp idt:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setExtension(e1); RESULT = info;:}
 ;
@@ -61,6 +62,7 @@ EXP ::= EXP EXPP
 ;
 
 EXPP ::= ID igual REG puntocoma
+    | y igual REG puntocoma
 ;
 
 REG ::= REG pre
@@ -71,7 +73,7 @@ REG ::= REG pre
     | REG or REGP
 ;
 
-REGP ::= comilla nom comilla
+REGP ::= str
     | corchetea RC corchetec
     | parentesisa REG parentesisc
     | corchetea REG corchetec
@@ -86,7 +88,8 @@ RCP ::= lin
     | tab
     | esp
     | number menos number
-    | caracter menos caracter
+    | caracterma menos caracterma
+    | caracterme menos caracterme
 ;
 
 TER ::= TER N
@@ -95,21 +98,25 @@ TER ::= TER N
     | T
 ;
 
-T ::= term ID TP
+T ::= term IDT TPT
 ;
 
-TP ::= coma ID TP 
+TPT ::= coma IDT TPT
     | puntocoma
 ;
 
-N ::= no term ID TP
+N ::= no term IDN TPN
+;
+
+TPN ::= coma IDN TPN
+    | puntocoma
 ;
 
 PROD ::= PROD PRODP
-    PRODP
+    | PRODP
 ;
 
-PRODP ::= idn dpp PR
+PRODP ::= IDN dpp PR
 ;
 
 PR ::= TE PR
@@ -118,19 +125,19 @@ PR ::= TE PR
     | puntocoma
 ;
 
-TE ::= idt dosp ID
-    | idt
+TE ::= IDT dosp ID
+    | IDT
 ;
 
-NO ::= idn
-    | idn dosp ID
+NO ::= IDN
+    | IDN dosp ID
 ;
 
 SEM ::= llavea RES llavec
 ;
 
 RES ::= result igual OP puntocoma
-    | printf parentesisa comilla COD pord comilla coma ID parentesisc puntocoma
+    | printf parentesisa str coma OP parentesisc puntocoma
 ;
 
 OP ::= OP mas OPP
@@ -145,11 +152,25 @@ OPP ::= OPP mult O
 
 O ::= number
     | parentesisa OP parentesisc
+    | ID
 ;
 
-ID ::= id
-    | idt
-    | idn
+ID ::= id:e1 {:RESULT = e1;:}
+    | idt:e1 {:RESULT = e1;:}
+    | idn:e1 {:RESULT = e1;:}
+;
+
+IDT ::= idt:e1 {:RESULT = e1;:}
+    | caracterme:e1 {:RESULT = e1;:}
+;
+
+IDN ::= idn:e1 {:RESULT = e1;:}
+    | caracterma:e1 {:RESULT = e1;:}
+;
+
+
+NOM ::= NOM:e1 ID:e2 {:RESULT = e1 + " " + e2;:}
+    | ID:e1 {:RESULT = e1;:}
 ;
 
 COD ::= COD CODP
@@ -158,5 +179,5 @@ COD ::= COD CODP
 CODP ::= or| nom| version| autor| lanzamiento| extension| term| no| result
     | llavea| llavec| y| coma| igual| corchetea| corchetec| parentesisa| parentesisc
     | mas| mult| menos| div| percent| puntocoma| dosp| lin| tab| esp| comilla| pre| punto
-    | caracter| idt| idn| number| codigo| nombre| id| dpp
+    | caracterma | caracterme | idt| idn| number| codigo| id| dpp
 ;

@@ -8,16 +8,17 @@ package com.mycompany.bowl.analizadores;
 /** CUP generated class containing symbol constants. */
 public class SintaxisLenguajesSym {
   /* terminals */
+  public static final int caracterme = 44;
   public static final int percent = 24;
-  public static final int printf = 40;
+  public static final int printf = 37;
   public static final int comilla = 30;
-  public static final int idn = 34;
+  public static final int idn = 42;
+  public static final int caracterma = 43;
   public static final int lin = 27;
   public static final int lanzamiento = 5;
   public static final int coma = 14;
   public static final int igual = 15;
-  public static final int pp = 37;
-  public static final int caracter = 33;
+  public static final int pp = 35;
   public static final int llavec = 11;
   public static final int llavea = 10;
   public static final int result = 9;
@@ -27,31 +28,31 @@ public class SintaxisLenguajesSym {
   public static final int dosp = 26;
   public static final int mas = 20;
   public static final int parentesisc = 19;
-  public static final int nombre = 36;
   public static final int error = 1;
   public static final int parentesisa = 18;
   public static final int term = 7;
   public static final int or = 2;
   public static final int esp = 29;
   public static final int punto = 32;
+  public static final int str = 38;
   public static final int autor = 4;
-  public static final int id = 38;
-  public static final int dpp = 39;
+  public static final int id = 41;
+  public static final int dpp = 36;
   public static final int y = 12;
   public static final int mult = 21;
   public static final int pre = 31;
   public static final int corchetec = 17;
-  public static final int codigo = 35;
   public static final int puntocoma = 25;
+  public static final int codigo = 33;
   public static final int corchetea = 16;
   public static final int pord = 13;
   public static final int tab = 28;
-  public static final int nom = 41;
+  public static final int nom = 34;
   public static final int version = 3;
   public static final int div = 23;
   public static final int no = 8;
-  public static final int idt = 43;
-  public static final int number = 42;
+  public static final int idt = 40;
+  public static final int number = 39;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -86,17 +87,18 @@ public class SintaxisLenguajesSym {
   "comilla",
   "pre",
   "punto",
-  "caracter",
-  "idn",
   "codigo",
-  "nombre",
+  "nom",
   "pp",
-  "id",
   "dpp",
   "printf",
-  "nom",
+  "str",
   "number",
-  "idt"
+  "idt",
+  "id",
+  "idn",
+  "caracterma",
+  "caracterme"
   };
 }
 

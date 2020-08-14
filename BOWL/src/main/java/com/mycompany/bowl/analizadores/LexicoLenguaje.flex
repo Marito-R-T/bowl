@@ -37,12 +37,12 @@ Number = ({OneNine}|{cero})
 <YYINITIAL> ("//")(.)*("\n") {/*NO PRESTAR ATENCION*/}
 /* Palabras Reservadas */
 
+<YYINITIAL> ("ersion") {return new Symbol(SintaxisLenguajesSym.version, yycolumn, yyline, yytext());}
+<YYINITIAL> ("terminal") {return new Symbol(SintaxisLenguajesSym.term, yycolumn, yyline, yytext());}
 <YYINITIAL> ("nombre") {return new Symbol(SintaxisLenguajesSym.nom, yycolumn, yyline, yytext());}
-<YYINITIAL> ("version") {return new Symbol(SintaxisLenguajesSym.version, yycolumn, yyline, yytext());}
 <YYINITIAL> ("autor") {return new Symbol(SintaxisLenguajesSym.autor, yycolumn, yyline, yytext());}
 <YYINITIAL> ("lanzamiento") {return new Symbol(SintaxisLenguajesSym.lanzamiento, yycolumn, yyline, yytext());}
 <YYINITIAL> ("extension") {return new Symbol(SintaxisLenguajesSym.extension, yycolumn, yyline, yytext());}
-<YYINITIAL> ("terminal") {return new Symbol(SintaxisLenguajesSym.term, yycolumn, yyline, yytext());}
 <YYINITIAL> ("no") {return new Symbol(SintaxisLenguajesSym.no, yycolumn, yyline, yytext());}
 <YYINITIAL> ("RESULT") {return new Symbol(SintaxisLenguajesSym.result, yycolumn, yyline, yytext());}
 <YYINITIAL> ("printf") {return new Symbol(SintaxisLenguajesSym.printf, yycolumn, yyline, yytext());}
@@ -78,12 +78,13 @@ Number = ({OneNine}|{cero})
 
 /* Expresiones Regulares */
 
-<YYINITIAL> {letrasmi}|{letrasma} {return new Symbol(SintaxisLenguajesSym.caracter, yycolumn, yyline, Integer.parseInt(yytext()));}
+<YYINITIAL> {letrasma} {return new Symbol(SintaxisLenguajesSym.caracterma, yycolumn, yyline, yytext());}
+<YYINITIAL> {letrasmi} {return new Symbol(SintaxisLenguajesSym.caracterme, yycolumn, yyline, yytext());}
 <YYINITIAL> {letrasmi}+ {return new Symbol(SintaxisLenguajesSym.idt, yycolumn, yyline, yytext());}
 <YYINITIAL> {letrasma}+ {return new Symbol(SintaxisLenguajesSym.idn, yycolumn, yyline, yytext());}
-<YYINITIAL> "-"{Number}+|{Number} {return new Symbol(SintaxisLenguajesSym.number, yycolumn, yyline, yytext());}
+<YYINITIAL> {Number}+ {return new Symbol(SintaxisLenguajesSym.number, yycolumn, yyline, yytext());}
 
-<YYINITIAL> ({letrasmi}|{letrasma}|{Number})+ {return new Symbol(SintaxisLenguajesSym.id, yycolumn, yyline, yytext());}
-<YYINITIAL> ({letrasmi}|{letrasma}|{Number}|" ")+ {return new Symbol(SintaxisLenguajesSym.nombre, yycolumn, yyline, yytext());}
+<YYINITIAL> ({letrasmi}|{letrasma})({letrasmi}|{letrasma}|{Number})* {return new Symbol(SintaxisLenguajesSym.id, yycolumn, yyline, yytext());}
+<YYINITIAL> ("\"")(.)+("\"") {return new Symbol(SintaxisLenguajesSym.str, yycolumn, yyline, yytext());}
 
-<YYINITIAL> (.)+ {return new Symbol(SintaxisLenguajesSym.codigo, yycolumn, yyline, yytext());}
+<YYINITIAL> . {return new Symbol(SintaxisLenguajesSym.codigo, yycolumn, yyline, yytext());}
