@@ -2,6 +2,7 @@ package com.mycompany.bowl.analizadores;
 
 import java_cup.runtime.*;
 import com.mycompany.bowl.backend.lenguaje.*;
+import com.mycompany.bowl.backend.lenguaje.lexico.nodos.*;
 
 class SintaxisLenguajes;
 
@@ -24,22 +25,23 @@ parser code
 :};
 
 
-terminal or, version, autor, lanzamiento, extension, term, no, result;
-terminal llavea, llavec, y, pord, coma, igual, corchetea, corchetec, parentesisa, parentesisc;
-terminal mas, mult, menos, div, percent, puntocoma, dosp, lin, tab, esp, comilla, pre, punto;
-terminal codigo, nom, pp, dpp, printf, str;
+terminal String or, version, autor, lanzamiento, extension, term, no, result;
+terminal String llavea, llavec, y, pord, coma, igual, corchetea, corchetec, parentesisa, parentesisc;
+terminal String mas, mult, menos, div, percent, puntocoma, dosp, lin, tab, esp, comilla, pre, punto;
+terminal String codigo, nom, pp, dpp, printf, str;
 terminal String number, idt, id, idn, caracterma, caracterme;
 
 non terminal Lenguaje S;
 non terminal InfoLenguaje INFO, INFOP;
-non terminal String VR, NOM, ID, IDT, IDN;
-non terminal COD, EXP, EXPP, REG, RC, RCP, TER, T;
+non terminal String VR, NOM, ID, IDT, IDN, COD, CODP, NUMBER;
+non terminal Integer NUMBERN;
+non terminal EXP, EXPP, TER, T, O;
 non terminal TPT, TPN, N, PROD, PRODP, PR, TE, NO, SEM, RES, OP, OPP;
-non terminal O, CODP, REGP;
+non terminal Nodo REG, REGP, REGPP, RC, RCP;
 
 start with S;
 
-S ::= INFO:e1 pp COD pp EXP pp TER PROD {:Lenguaje lenguaje = new Lenguaje(); lenguaje.setInfo(e1); RESULT = lenguaje;:}
+S ::= INFO:e1 pp COD:e2 pp EXP pp TER PROD {:Lenguaje lenguaje = new Lenguaje(); lenguaje.setInfo(e1); lenguaje.realizarCodigo(e2); RESULT = lenguaje;:}
 ;
 
 INFO ::= INFO:e1 INFOP:e2 {:e1.ingresarDato(e2); RESULT = e1;:}
@@ -65,31 +67,33 @@ EXPP ::= ID igual REG puntocoma
     | y igual REG puntocoma
 ;
 
-REG ::= REG pre
-    | REG mas
-    | REG mult
-    | REG REGP
-    | REGP
-    | REG or REGP
+REG ::= REG:e1 or REGP:e2 {:RESULT = new NodoDisyuncion(e1, e2);:}
+    | REGP:e1 {:RESULT = e1;:}
 ;
 
-REGP ::= str
-    | corchetea RC corchetec
-    | parentesisa REG parentesisc
-    | corchetea REG corchetec
-    | punto
+REGP ::= REGP:e1 pre {:RESULT = new NodoMas(e1);:}
+    | REGP:e1 mas {:RESULT = new NodoMas(e1);:}
+    | REGP:e1 mult {:RESULT = new NodoAsterisco(e1);:}
+    | REGP:e1 REGPP:e2 {:RESULT = new NodoConcat(e1, e2);:}
+    | REGPP:e1 {:RESULT = e1;:}
 ;
 
-RC ::= RC RCP
-    | RCP
+REGPP ::= str:e1 {:RESULT = Nodo.hacerNodos(e1);:}
+    | parentesisa REG:e1 parentesisc {:RESULT = e1;:}
+    | corchetea RC:e1 corchetec {:RESULT = e1;:}
+    | punto {:char c1 = 0, c2 = 250; new NodoTerminal(c1, c2);:}
 ;
 
-RCP ::= lin
-    | tab
-    | esp
-    | number menos number
-    | caracterma menos caracterma
-    | caracterme menos caracterme
+RC ::= RC:e1 RCP:e2 {:RESULT = new NodoDisyuncion(e1, e2);:}
+    | RCP:e1 {:RESULT = e1;:}
+;
+
+RCP ::= lin {:char c1 = 10; RESULT = new NodoTerminal(c1);:}
+    | tab {:char c1 = 9; RESULT = new NodoTerminal(c1);:}
+    | esp {:char c1 = 32; RESULT = new NodoTerminal(c1);:}
+    | number:e1 menos number:e2 {:RESULT = new NodoTerminal(e1, e2);:}
+    | caracterma:e1 menos caracterma:e2 {:RESULT = new NodoTerminal(e1, e2);:}
+    | caracterme:e1 menos caracterme:e2 {:RESULT = new NodoTerminal(e1, e2);:}
 ;
 
 TER ::= TER N
@@ -150,7 +154,7 @@ OPP ::= OPP mult O
     | O
 ;
 
-O ::= number
+O ::= NUMBERN
     | parentesisa OP parentesisc
     | ID
 ;
@@ -173,11 +177,27 @@ NOM ::= NOM:e1 ID:e2 {:RESULT = e1 + " " + e2;:}
     | ID:e1 {:RESULT = e1;:}
 ;
 
-COD ::= COD CODP
-    | CODP
+COD ::= COD:e1 CODP:e2 {:RESULT = e1 + e2;:}
+    | CODP:e1 {:RESULT = e1;:}
 ;
-CODP ::= or| nom| version| autor| lanzamiento| extension| term| no| result
-    | llavea| llavec| y| coma| igual| corchetea| corchetec| parentesisa| parentesisc
-    | mas| mult| menos| div| percent| puntocoma| dosp| lin| tab| esp| comilla| pre| punto
-    | caracterma | caracterme | idt| idn| number| codigo| id| dpp
+
+CODP ::= or:e1 {:RESULT = e1;:}| nom:e1 {:RESULT = e1;:}| version:e1 {:RESULT = e1;:}
+    | autor:e1 {:RESULT = e1;:}| lanzamiento:e1 {:RESULT = e1;:}| extension:e1 {:RESULT = e1;:}
+    | term:e1 {:RESULT = e1;:}| no:e1 {:RESULT = e1;:}| result:e1 {:RESULT = e1;:}
+    | llavea:e1 {:RESULT = e1;:}| llavec:e1 {:RESULT = e1;:}| y:e1 {:RESULT = e1;:}
+    | coma:e1 {:RESULT = e1;:}| igual:e1 {:RESULT = e1;:}| corchetea:e1 {:RESULT = e1;:}| corchetec:e1 {:RESULT = e1;:}
+    | parentesisa:e1 {:RESULT = e1;:}| parentesisc:e1 {:RESULT = e1;:}| mas:e1 {:RESULT = e1;:}
+    | mult:e1 {:RESULT = e1;:}| menos:e1 {:RESULT = e1;:}| div:e1 {:RESULT = e1;:}| percent:e1 {:RESULT = e1;:}
+    | puntocoma:e1 {:RESULT = e1;:}| dosp:e1 {:RESULT = e1;:}| lin:e1 {:RESULT = e1;:}| tab:e1 {:RESULT = e1;:}
+    | esp:e1 {:RESULT = e1;:}| comilla:e1 {:RESULT = e1;:}| pre:e1 {:RESULT = e1;:}| punto:e1 {:RESULT = e1;:}
+    | caracterma:e1 {:RESULT = e1;:} | caracterme:e1 {:RESULT = e1;:} | idt:e1 {:RESULT = e1;:}| idn:e1| number:e1 {:RESULT = e1;:}
+    | codigo:e1 {:RESULT = e1;:}| id:e1 {:RESULT = e1;:}| dpp:e1 {:RESULT = e1;:}
+;
+
+NUMBERN ::= NUMBER:e1 {:RESULT = Integer.parseInt(e1);:}
+        | menos:e1 NUMBER:e2 {:RESULT = Integer.parseInt(e1+e2);:}
+;
+
+NUMBER ::= NUMBER:e1 number:e2 {:RESULT = e1+e2;:}
+        | number:e1 {:RESULT = e1;:}
 ;

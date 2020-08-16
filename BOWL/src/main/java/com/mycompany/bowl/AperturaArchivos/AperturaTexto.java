@@ -8,13 +8,11 @@ package com.mycompany.bowl.AperturaArchivos;
 import com.mycompany.bowl.GUI.BowlGUI;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -29,8 +27,7 @@ public class AperturaTexto {
         choser = new JFileChooser();
     }
     
-    public File abrirTexto(BowlGUI bowl, String extension){
-        choser.setFileFilter(new FileNameExtensionFilter("la extensión permitida es: "+ extension, extension));
+    public File abrirTexto(BowlGUI bowl){
         if(choser.showOpenDialog(bowl) == JFileChooser.APPROVE_OPTION){
             return choser.getSelectedFile();
         }

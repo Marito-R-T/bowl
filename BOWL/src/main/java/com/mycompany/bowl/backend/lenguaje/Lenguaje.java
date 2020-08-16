@@ -5,13 +5,19 @@
  */
 package com.mycompany.bowl.backend.lenguaje;
 
+import com.mycompany.bowl.backend.lenguaje.codigojava.AnalisisCodigoJava;
+
 /**
  *
  * @author moise
  */
 public class Lenguaje {
+
+    private InfoLenguaje info;
+    private AnalisisCodigoJava codigo;
     
-   private InfoLenguaje info; 
+    public void realizarCodigo(String codigo) {
+    }
 
     public InfoLenguaje getInfo() {
         return info;
@@ -20,5 +26,5 @@ public class Lenguaje {
     public void setInfo(InfoLenguaje info) {
         this.info = info;
     }
-   
+
 }

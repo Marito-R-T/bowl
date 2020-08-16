@@ -82,9 +82,9 @@ Number = ({OneNine}|{cero})
 <YYINITIAL> {letrasmi} {return new Symbol(SintaxisLenguajesSym.caracterme, yycolumn, yyline, yytext());}
 <YYINITIAL> {letrasmi}+ {return new Symbol(SintaxisLenguajesSym.idt, yycolumn, yyline, yytext());}
 <YYINITIAL> {letrasma}+ {return new Symbol(SintaxisLenguajesSym.idn, yycolumn, yyline, yytext());}
-<YYINITIAL> {Number}+ {return new Symbol(SintaxisLenguajesSym.number, yycolumn, yyline, yytext());}
+<YYINITIAL> {Number} {return new Symbol(SintaxisLenguajesSym.number, yycolumn, yyline, yytext());}
 
 <YYINITIAL> ({letrasmi}|{letrasma})({letrasmi}|{letrasma}|{Number})* {return new Symbol(SintaxisLenguajesSym.id, yycolumn, yyline, yytext());}
-<YYINITIAL> ("\"")(.)+("\"") {return new Symbol(SintaxisLenguajesSym.str, yycolumn, yyline, yytext());}
+<YYINITIAL> ("\"")(.)+("\"") {return new Symbol(SintaxisLenguajesSym.str, yycolumn, yyline, yytext().substring(1, yytext().length()-1));}
 
 <YYINITIAL> . {return new Symbol(SintaxisLenguajesSym.codigo, yycolumn, yyline, yytext());}
