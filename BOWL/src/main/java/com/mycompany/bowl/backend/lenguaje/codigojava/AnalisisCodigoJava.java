@@ -12,9 +12,12 @@ package com.mycompany.bowl.backend.lenguaje.codigojava;
  */
 public class AnalisisCodigoJava {
     
+    private String codigo, nombre;
+    
     
     public AnalisisCodigoJava(String codigo, String nombre){
-        
+        this.codigo = codigo;
+        this.nombre = nombre;
     }
     
 }

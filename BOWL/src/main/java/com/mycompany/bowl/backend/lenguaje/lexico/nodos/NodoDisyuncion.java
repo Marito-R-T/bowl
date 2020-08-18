@@ -5,17 +5,20 @@
  */
 package com.mycompany.bowl.backend.lenguaje.lexico.nodos;
 
+import java.util.List;
+
 /**
  *
  * @author mari2bar
  */
 public class NodoDisyuncion extends Nodo {
-    
+
     private Nodo nodo1, nodo2;
-    
-    public NodoDisyuncion(Nodo nodo1, Nodo nodo2){
+
+    public NodoDisyuncion(Nodo nodo1, Nodo nodo2) {
         this.nodo1 = nodo1;
         this.nodo2 = nodo2;
+        super.anulable = nodo1.anulable || nodo2.anulable;
     }
 
     public Nodo getNodo1() {
@@ -33,5 +36,35 @@ public class NodoDisyuncion extends Nodo {
     public void setNodo2(Nodo nodo2) {
         this.nodo2 = nodo2;
     }
-    
+
+    @Override
+    protected List<Nodo> realizarPrimerapos() {
+        super.primerapos.addAll(nodo1.realizarPrimerapos());
+        super.primerapos.addAll(nodo2.realizarPrimerapos());
+        return super.primerapos;
+    }
+
+    @Override
+    protected List<Nodo> realizarUltimapos() {
+        super.ultimapos.addAll(nodo1.realizarUltimapos());
+        super.ultimapos.addAll(nodo2.realizarUltimapos());
+        return super.ultimapos;
+    }
+
+    @Override
+    protected void realizarSiguientepos() {
+        if (!(nodo1 instanceof NodoTerminal)) {
+            nodo1.realizarSiguientepos();
+        }
+        if (!(nodo2 instanceof NodoTerminal)) {
+            nodo2.realizarSiguientepos();
+        }
+    }
+
+    @Override
+    protected void ingresarNivelNombre(String nombre, int nivel) {
+        nodo1.ingresarNivelNombre(nombre, nivel);
+        nodo2.ingresarNivelNombre(nombre, nivel);
+    }
+
 }

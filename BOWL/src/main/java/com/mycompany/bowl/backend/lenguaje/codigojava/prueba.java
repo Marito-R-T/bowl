@@ -6,6 +6,8 @@
 package com.mycompany.bowl.backend.lenguaje.codigojava;
 
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import org.codehaus.commons.compiler.jdk.SimpleCompiler;
 
 /**
@@ -19,7 +21,7 @@ public class prueba {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        try {
+        /*try {
             String javaSource = "public class prueba {\n"
                     + "\n"
                     + "    public String gg(int i) {\n"
@@ -40,6 +42,16 @@ public class prueba {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
+        }*/
+        
+        List<String> s = new ArrayList<>();
+        s.add("a");
+        s.add("b");
+        for (String string : s) {
+            System.out.println(string);
+            if(s.size()<10){
+                s.add(string+s.size());
+            }
         }
     }
 

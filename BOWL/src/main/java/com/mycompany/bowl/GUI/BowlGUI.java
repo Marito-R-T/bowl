@@ -10,6 +10,7 @@ import com.mycompany.bowl.AperturaArchivos.GuardadoTexto;
 import com.mycompany.bowl.analizadores.LexicoLenguaje;
 import com.mycompany.bowl.analizadores.SintaxisLenguajes;
 import com.mycompany.bowl.backend.lenguaje.Lenguaje;
+import com.mycompany.bowl.backend.lenguaje.lexico.Token;
 import java.io.File;
 import java.io.StringReader;
 import javax.swing.JOptionPane;
@@ -188,7 +189,11 @@ public class BowlGUI extends javax.swing.JFrame {
             String s = apertura.leerTexto(tabbedTexto.getToolTipTextAt(tabbedTexto.getSelectedIndex()));
             SintaxisLenguajes lenguajes = new SintaxisLenguajes(new LexicoLenguaje(new StringReader(s)));
             Lenguaje len = (Lenguaje) lenguajes.parse().value;
-            System.out.println(len.getInfo().getAutor());
+            Token tok;
+            do {                
+                tok = len.analizarTexto("12.61\n11");
+                System.out.println(tok);
+            } while (tok!=null && !tok.isUltimo());
         } catch (Exception ex) {
             System.out.println(ex);
         }

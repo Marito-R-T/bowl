@@ -5,12 +5,28 @@
  */
 package com.mycompany.bowl.backend.lenguaje.lexico.nodos;
 
+import java.util.List;
+
 /**
  *
  * @author mari2bar
  */
-public class NodoAceptacion {
+public class NodoAceptacion extends NodoTerminal{
     
+    public NodoAceptacion() {
+        super('$');
+    }
     
-    
+    @Override
+    protected List<Nodo> realizarPrimerapos() {
+        super.primerapos.add(this);
+        return super.primerapos;
+    }
+
+    @Override
+    protected List<Nodo> realizarUltimapos() {
+        super.ultimapos.add(this);
+        return super.ultimapos;
+    }
+
 }

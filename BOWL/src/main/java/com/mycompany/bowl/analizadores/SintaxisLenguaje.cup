@@ -3,6 +3,9 @@ package com.mycompany.bowl.analizadores;
 import java_cup.runtime.*;
 import com.mycompany.bowl.backend.lenguaje.*;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.*;
+import com.mycompany.bowl.backend.lenguaje.lexico.*;
+import java.util.ArrayList;
+import java.util.List;
 
 class SintaxisLenguajes;
 
@@ -35,13 +38,15 @@ non terminal Lenguaje S;
 non terminal InfoLenguaje INFO, INFOP;
 non terminal String VR, NOM, ID, IDT, IDN, COD, CODP, NUMBER;
 non terminal Integer NUMBERN;
-non terminal EXP, EXPP, TER, T, O;
+non terminal TER, T, O;
 non terminal TPT, TPN, N, PROD, PRODP, PR, TE, NO, SEM, RES, OP, OPP;
-non terminal Nodo REG, REGP, REGPP, RC, RCP;
+non terminal Nodo REG, REGP, REGPP, RC, RCP, EXP, EXPP;
+/*non terminal List<ArbolBinario> ;
+non terminal ArbolBinario ;*/
 
 start with S;
 
-S ::= INFO:e1 pp COD:e2 pp EXP pp TER PROD {:Lenguaje lenguaje = new Lenguaje(); lenguaje.setInfo(e1); lenguaje.realizarCodigo(e2); RESULT = lenguaje;:}
+S ::= INFO:e1 pp COD:e2 pp EXP:e3 pp TER PROD {:Lenguaje lenguaje = new Lenguaje(); lenguaje.setInfo(e1); lenguaje.realizarCodigo(e2); lenguaje.setBinario(e3); RESULT = lenguaje;:}
 ;
 
 INFO ::= INFO:e1 INFOP:e2 {:e1.ingresarDato(e2); RESULT = e1;:}
@@ -51,37 +56,37 @@ INFO ::= INFO:e1 INFOP:e2 {:e1.ingresarDato(e2); RESULT = e1;:}
 INFOP ::= nom dosp NOM:e1 puntocoma {:System.out.println(e1); InfoLenguaje info = new InfoLenguaje(); info.setNombre(e1);RESULT = info;:}
     | version dosp VR:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setVersion(e1); RESULT = info;:}
     | autor dosp NOM:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setAutor(e1); RESULT = info;:}
-    | lanzamiento dosp number:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setLanzamiento(Integer.parseInt(e1)); RESULT = info;:}
+    | lanzamiento dosp NUMBER:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setLanzamiento(Integer.parseInt(e1)); RESULT = info;:}
     | extension dosp idt:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setExtension(e1); RESULT = info;:}
 ;
 
-VR ::= number:e1 {:RESULT = e1;:}
-    | number:e1 punto VR:e2 {:RESULT = e1+e2;:}
+VR ::= NUMBER:e1 {:RESULT = e1;:}
+    | NUMBER:e1 punto VR:e2 {:RESULT = e1+e2;:}
 ;
 
-EXP ::= EXP EXPP
-    | EXPP
+EXP ::= EXP:e1 EXPP:e2 {:e2.setNivel((e1.getNivel()+1)); e2.ingresar(); Nodo n = new NodoDisyuncion(e1, e2); n.setNivel(e2.getNivel()); RESULT = n;/*e2.crearAFD(); e1.add(e2); RESULT = e1;*/:}
+    | EXPP:e1 {:e1.setNivel(1); e1.ingresar(); RESULT = e1; /*List<ArbolBinario> c = new ArrayList<>(); c.add(e1); RESULT = c;*/:}
 ;
 
-EXPP ::= ID igual REG puntocoma
-    | y igual REG puntocoma
+EXPP ::= ID:e1 igual REG:e2 puntocoma {:e2.setNombre(e1); RESULT = e2;/*RESULT = new ArbolBinario(e2, e1);*/:}
+    | y igual REG:e1 puntocoma {:e1.setNombre(null); RESULT = e1;/*RESULT = new ArbolBinario(e1, null);*/:}
 ;
 
 REG ::= REG:e1 or REGP:e2 {:RESULT = new NodoDisyuncion(e1, e2);:}
     | REGP:e1 {:RESULT = e1;:}
 ;
 
-REGP ::= REGP:e1 pre {:RESULT = new NodoMas(e1);:}
-    | REGP:e1 mas {:RESULT = new NodoMas(e1);:}
-    | REGP:e1 mult {:RESULT = new NodoAsterisco(e1);:}
-    | REGP:e1 REGPP:e2 {:RESULT = new NodoConcat(e1, e2);:}
+REGP ::= REGP:e1 REGPP:e2 {:RESULT = new NodoConcat(e1, e2);:}
     | REGPP:e1 {:RESULT = e1;:}
 ;
 
-REGPP ::= str:e1 {:RESULT = Nodo.hacerNodos(e1);:}
+REGPP ::= REGPP:e1 pre {:RESULT = new NodoOpcional(e1);:}
+    | REGPP:e1 mas {:RESULT = new NodoMas(e1);:}
+    | REGPP:e1 mult {:RESULT = new NodoAsterisco(e1);:}
+    | str:e1 {:RESULT = Nodo.hacerNodos(e1);:}
     | parentesisa REG:e1 parentesisc {:RESULT = e1;:}
     | corchetea RC:e1 corchetec {:RESULT = e1;:}
-    | punto {:char c1 = 0, c2 = 250; new NodoTerminal(c1, c2);:}
+    | punto {:char c1 = 0, c2 = 250; RESULT = new NodoTerminal(c1, c2);:}
 ;
 
 RC ::= RC:e1 RCP:e2 {:RESULT = new NodoDisyuncion(e1, e2);:}

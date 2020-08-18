@@ -12,22 +12,33 @@ import java.util.List;
  *
  * @author mari2bar
  */
-public class Nodo {
+public abstract class Nodo {
 
-    private final List<Nodo> primeramos = new ArrayList<>(), ultimapos = new ArrayList<>();
-    private final List<Nodo> siguientepos = new ArrayList<>();
-    private boolean anulable;
+    protected final List<Nodo> primerapos = new ArrayList<>(), ultimapos = new ArrayList<>();
+    protected boolean anulable;
+    protected String nombre;
+    protected int nivel;
 
-    public List<Nodo> getPrimeramos() {
-        return primeramos;
+    public void realizarOPS(){
+        this.realizarPrimerapos();
+        this.realizarUltimapos();
+        this.realizarSiguientepos();
+    }
+    
+    protected abstract List<Nodo> realizarPrimerapos();
+    
+    protected abstract List<Nodo> realizarUltimapos();
+    
+    protected abstract void realizarSiguientepos();
+    
+    protected abstract void ingresarNivelNombre(String nombre, int nivel);
+    
+    public List<Nodo> getPrimerapos() {
+        return primerapos;
     }
 
     public List<Nodo> getUltimapos() {
         return ultimapos;
-    }
-
-    public List<Nodo> getSiguientepos() {
-        return siguientepos;
     }
 
     public boolean isAnulable() {
@@ -49,4 +60,25 @@ public class Nodo {
             return null;
         }
     }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(int nivel) {
+        this.nivel = nivel;
+    }
+    
+    public void ingresar(){
+        this.ingresarNivelNombre(nombre, nivel);
+    }
+    
 }

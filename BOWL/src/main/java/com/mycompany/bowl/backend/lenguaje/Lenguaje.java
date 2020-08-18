@@ -6,6 +6,13 @@
 package com.mycompany.bowl.backend.lenguaje;
 
 import com.mycompany.bowl.backend.lenguaje.codigojava.AnalisisCodigoJava;
+import com.mycompany.bowl.backend.lenguaje.lexico.ArbolBinario;
+import com.mycompany.bowl.backend.lenguaje.lexico.Token;
+import com.mycompany.bowl.backend.lenguaje.lexico.nodos.Nodo;
+import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoAceptacion;
+import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoConcat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -15,8 +22,17 @@ public class Lenguaje {
 
     private InfoLenguaje info;
     private AnalisisCodigoJava codigo;
-    
+    private ArbolBinario binario;
+    private int line, column, tam;
+
+    public Lenguaje() {
+        line = 0;
+        column = 0;
+        tam = 0;
+    }
+
     public void realizarCodigo(String codigo) {
+        this.codigo = new AnalisisCodigoJava(codigo, "hola");
     }
 
     public InfoLenguaje getInfo() {
@@ -25,6 +41,30 @@ public class Lenguaje {
 
     public void setInfo(InfoLenguaje info) {
         this.info = info;
+    }
+
+    public ArbolBinario getBinario() {
+        return binario;
+    }
+
+    public void setBinario(Nodo binario) {
+        this.binario = new ArbolBinario(binario);
+        this.binario.crearAFD();
+    }
+
+    public Token analizarTexto(String s) {
+        if (s.length() > tam) {
+            Token token = binario.conseguirToken(s.substring(tam), column, line);
+            if (token != null) {
+                line += token.getLines();
+                column = token.getColumnf();
+                tam += token.getTamano();
+                return token;
+            }
+        } else {
+            return new Token(line, column, 0, 0, column, true, null, null);
+        }
+        return null;
     }
 
 }
