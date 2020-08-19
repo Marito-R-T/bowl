@@ -6,6 +6,8 @@ import com.mycompany.bowl.backend.lenguaje.lexico.nodos.*;
 import com.mycompany.bowl.backend.lenguaje.lexico.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.mycompany.bowl.backend.lenguaje.sintactico.*;
+import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.*;
 
 class SintaxisLenguajes;
 
@@ -38,15 +40,23 @@ non terminal Lenguaje S;
 non terminal InfoLenguaje INFO, INFOP;
 non terminal String VR, NOM, ID, IDT, IDN, COD, CODP, NUMBER;
 non terminal Integer NUMBERN;
-non terminal TER, T, O;
-non terminal TPT, TPN, N, PROD, PRODP, PR, TE, NO, SEM, RES, OP, OPP;
+non terminal ArrayList<NodoSintactico> PR;
+non terminal TablaDeSimbolos TER;
+non terminal ArrayList<Terminal> T;
+non terminal ArrayList<NoTerminal> N;
+non terminal Terminal TE;
+non terminal NoTerminal NO;
+non terminal ListaProducciones PROD;
+non terminal Produccion PRODP;
+non terminal O;
+non terminal SEM, RES, OP, OPP;
 non terminal Nodo REG, REGP, REGPP, RC, RCP, EXP, EXPP;
 /*non terminal List<ArbolBinario> ;
 non terminal ArbolBinario ;*/
 
 start with S;
 
-S ::= INFO:e1 pp COD:e2 pp EXP:e3 pp TER PROD {:Lenguaje lenguaje = new Lenguaje(); lenguaje.setInfo(e1); lenguaje.realizarCodigo(e2); lenguaje.setBinario(e3); RESULT = lenguaje;:}
+S ::= INFO:e1 pp COD:e2 pp EXP:e3 pp TER:e4 PROD {:Lenguaje lenguaje = new Lenguaje(); lenguaje.setInfo(e1); lenguaje.realizarCodigo(e2); lenguaje.setBinario(e3); RESULT = lenguaje;:}
 ;
 
 INFO ::= INFO:e1 INFOP:e2 {:e1.ingresarDato(e2); RESULT = e1;:}
@@ -101,48 +111,42 @@ RCP ::= lin {:char c1 = 10; RESULT = new NodoTerminal(c1);:}
     | caracterme:e1 menos caracterme:e2 {:RESULT = new NodoTerminal(e1, e2);:}
 ;
 
-TER ::= TER N
-    | TER T
-    | N
-    | T
+TER ::= TER:e1 N:e2 puntocoma {:e1.getNoterminal().addAll(e2); RESULT =e1;:}
+    | TER:e1 T:e2 puntocoma {:e1.getTerminal().addAll(e2); RESULT = e1;:}
+    | N:e1 puntocoma {:TablaDeSimbolos t = new TablaDeSimbolos(); t.getNoterminal().addAll(e1); RESULT = t;:}
+    | T:e1 puntocoma {:TablaDeSimbolos t = new TablaDeSimbolos(); t.getTerminal().addAll(e1); RESULT = t;:}
 ;
 
-T ::= term IDT TPT
+T ::= T:e1 coma IDT:e2 {:e1.add(new Terminal(e2)); RESULT = e1;:}
+    | term IDT:e1 {:ArrayList<Terminal> n = new ArrayList<>(); n.add(new Terminal(e1)); RESULT = n;:}
 ;
 
-TPT ::= coma IDT TPT
-    | puntocoma
+N ::= N:e1 coma IDN:e2 {:e1.add(new NoTerminal(e2)); RESULT = e1;:}
+    | no term IDN:e1 {:ArrayList<NoTerminal> n = new ArrayList<>(); n.add(new NoTerminal(e1)); RESULT = n;:}
 ;
 
-N ::= no term IDN TPN
+PROD ::= PROD:e1 PRODP:e2 {:e1.getProducciones().add(e2); RESULT = e1;:}
+    | PRODP:e1 {:ArrayList<Produccion> pr = new ArrayList<>(); pr.add(e1); RESULT = new ListaProducciones(e1);:}
 ;
 
-TPN ::= coma IDN TPN
-    | puntocoma
+PRODP ::= IDN:e1 dpp PR:e2 SEM puntocoma {:RESULT = new Produccion(new NoTerminal(e1), e2);:}
 ;
 
-PROD ::= PROD PRODP
-    | PRODP
+PR ::= PR:e1 TE:e2 {:e1.add(e2); RESULT = e1;:}
+    | PR:e1 NO:e2 {:e1.add(e2); RESULT = e1;:}
+    | TE:e1 {:ArrayList<NodoSintactico> n = new ArrayList<>(); n.add(e1); RESULT = n;:}
+    | NO:e1 {:ArrayList<NodoSintactico> n = new ArrayList<>(); n.add(e1); RESULT = n;:}
 ;
 
-PRODP ::= IDN dpp PR
+TE ::= IDT:e1 dosp ID:e2 {:RESULT = new Terminal(e1, e2);:}
+    | IDT:e1 {:RESULT = new Terminal(e1);:}
 ;
 
-PR ::= TE PR
-    | NO PR
-    | SEM puntocoma
-    | puntocoma
+NO ::= IDN:e1 dosp ID:e2 {:RESULT = new NoTerminal(e1, e2);:}
+    | IDN:e1 {:RESULT = new NoTerminal(e1);:}
 ;
 
-TE ::= IDT dosp ID
-    | IDT
-;
-
-NO ::= IDN
-    | IDN dosp ID
-;
-
-SEM ::= llavea RES llavec
+SEM ::= llavea RES:e1 llavec 
 ;
 
 RES ::= result igual OP puntocoma
