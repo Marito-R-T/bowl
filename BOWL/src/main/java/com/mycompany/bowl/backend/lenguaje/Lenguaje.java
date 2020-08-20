@@ -9,10 +9,8 @@ import com.mycompany.bowl.backend.lenguaje.codigojava.AnalisisCodigoJava;
 import com.mycompany.bowl.backend.lenguaje.lexico.ArbolBinario;
 import com.mycompany.bowl.backend.lenguaje.lexico.Token;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.Nodo;
-import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoAceptacion;
-import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoConcat;
-import java.util.ArrayList;
-import java.util.List;
+import com.mycompany.bowl.backend.lenguaje.sintactico.TablaDeSimbolos;
+import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.ListaProducciones;
 
 /**
  *
@@ -24,6 +22,8 @@ public class Lenguaje {
     private AnalisisCodigoJava codigo;
     private ArbolBinario binario;
     private int line, column, tam;
+    private TablaDeSimbolos tablaSimbolos;
+    private ListaProducciones producciones;
 
     public Lenguaje() {
         line = 0;
@@ -50,6 +50,23 @@ public class Lenguaje {
     public void setBinario(Nodo binario) {
         this.binario = new ArbolBinario(binario);
         this.binario.crearAFD();
+    }
+
+    public TablaDeSimbolos getTablaSimbolos() {
+        return tablaSimbolos;
+    }
+
+    public void setTablaSimbolos(TablaDeSimbolos tablaSimbolos) {
+        this.tablaSimbolos = tablaSimbolos;
+    }
+
+    public ListaProducciones getProducciones() {
+        return producciones;
+    }
+
+    public void setProducciones(ListaProducciones producciones) {
+        this.producciones = producciones;
+        this.producciones.realizarLALR(tablaSimbolos);
     }
 
     public Token analizarTexto(String s) {

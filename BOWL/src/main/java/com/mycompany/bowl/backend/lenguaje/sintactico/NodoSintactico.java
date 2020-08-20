@@ -12,6 +12,7 @@ package com.mycompany.bowl.backend.lenguaje.sintactico;
 public class NodoSintactico {
     
     protected final String id, nombre;
+    private boolean anulable = false;
     
     public NodoSintactico(String nombre, String id){
         this.id = id;
@@ -21,6 +22,22 @@ public class NodoSintactico {
     public NodoSintactico(String nombre) {
         this.nombre = nombre;
         this.id = null;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public boolean isAnulable() {
+        return anulable;
+    }
+
+    public void setAnulable(boolean anulable) {
+        this.anulable = anulable;
     }
     
 }

@@ -8,17 +8,18 @@ package com.mycompany.bowl.analizadores;
 /** CUP generated class containing symbol constants. */
 public class SintaxisLenguajesSym {
   /* terminals */
-  public static final int caracterme = 44;
+  public static final int caracterme = 47;
   public static final int percent = 24;
   public static final int printf = 37;
   public static final int comilla = 30;
-  public static final int idn = 42;
-  public static final int caracterma = 43;
+  public static final int idn = 45;
+  public static final int caracterma = 46;
   public static final int lin = 27;
   public static final int lanzamiento = 5;
   public static final int coma = 14;
   public static final int igual = 15;
   public static final int pp = 35;
+  public static final int real = 40;
   public static final int llavec = 11;
   public static final int llavea = 10;
   public static final int result = 9;
@@ -30,13 +31,14 @@ public class SintaxisLenguajesSym {
   public static final int parentesisc = 19;
   public static final int error = 1;
   public static final int parentesisa = 18;
+  public static final int entero = 39;
   public static final int term = 7;
   public static final int or = 2;
   public static final int esp = 29;
   public static final int punto = 32;
   public static final int str = 38;
   public static final int autor = 4;
-  public static final int id = 41;
+  public static final int id = 44;
   public static final int dpp = 36;
   public static final int y = 12;
   public static final int mult = 21;
@@ -51,8 +53,9 @@ public class SintaxisLenguajesSym {
   public static final int version = 3;
   public static final int div = 23;
   public static final int no = 8;
-  public static final int idt = 40;
-  public static final int number = 39;
+  public static final int idt = 43;
+  public static final int number = 42;
+  public static final int cadena = 41;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -93,6 +96,9 @@ public class SintaxisLenguajesSym {
   "dpp",
   "printf",
   "str",
+  "entero",
+  "real",
+  "cadena",
   "number",
   "idt",
   "id",

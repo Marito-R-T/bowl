@@ -46,6 +46,9 @@ Number = ({OneNine}|{cero})
 <YYINITIAL> ("no") {return new Symbol(SintaxisLenguajesSym.no, yycolumn, yyline, yytext());}
 <YYINITIAL> ("RESULT") {return new Symbol(SintaxisLenguajesSym.result, yycolumn, yyline, yytext());}
 <YYINITIAL> ("printf") {return new Symbol(SintaxisLenguajesSym.printf, yycolumn, yyline, yytext());}
+<YYINITIAL> ("entero") {return new Symbol(SintaxisLenguajesSym.entero, yycolumn, yyline, yytext());}
+<YYINITIAL> ("real") {return new Symbol(SintaxisLenguajesSym.real, yycolumn, yyline, yytext());}
+<YYINITIAL> ("cadena") {return new Symbol(SintaxisLenguajesSym.cadena, yycolumn, yyline, yytext());}
 
 /* Espacios en blanco */
 {espacio}+ {/*Ignore*/}
