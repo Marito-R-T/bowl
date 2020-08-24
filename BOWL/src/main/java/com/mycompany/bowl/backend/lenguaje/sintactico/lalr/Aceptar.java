@@ -5,10 +5,17 @@
  */
 package com.mycompany.bowl.backend.lenguaje.sintactico.lalr;
 
+import com.mycompany.bowl.backend.lenguaje.sintactico.Terminal;
+import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.Produccion;
+
 /**
  *
  * @author mari2bar
  */
-public class Primeros {
+public class Aceptar extends Remove {
+    
+    public Aceptar(Produccion pr, Terminal t) {
+        super(pr, t);
+    }
     
 }

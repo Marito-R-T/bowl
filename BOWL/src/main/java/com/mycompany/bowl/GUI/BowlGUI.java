@@ -191,7 +191,7 @@ public class BowlGUI extends javax.swing.JFrame {
             Lenguaje len = (Lenguaje) lenguajes.parse().value;
             Token tok;
             do {                
-                tok = len.analizarTexto("12.61\n11");
+                tok = len.analizarTexto("**=");
                 System.out.println(tok);
             } while (tok!=null && !tok.isUltimo());
         } catch (Exception ex) {

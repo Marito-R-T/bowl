@@ -36,4 +36,9 @@ public class NoTerminal extends NodoSintactico {
         }
     }
     
+    @Override
+    public String toString() {
+        return nombre;
+    }
+    
 }

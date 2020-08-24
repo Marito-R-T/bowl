@@ -19,4 +19,8 @@ public class ProduccionInicial extends Produccion{
         super(new NoTerminal("SP"), sintactico);
     }
     
+    public ProduccionInicial(Produccion produccion) {
+        super(produccion);
+    }
+
 }

@@ -19,4 +19,9 @@ public class Terminal extends NodoSintactico {
         super(nombre);
     }
     
+    @Override
+    public String toString() {
+        return nombre;
+    }
+    
 }

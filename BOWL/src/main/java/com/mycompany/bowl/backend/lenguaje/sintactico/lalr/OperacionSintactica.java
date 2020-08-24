@@ -3,16 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.bowl.backend.lenguaje.sintactico;
+package com.mycompany.bowl.backend.lenguaje.sintactico.lalr;
 
 /**
  *
  * @author mari2bar
  */
-public class Aceptacion extends Terminal {
-    
-    public Aceptacion() {
-        super(null);
-    }
+public class OperacionSintactica {
     
 }
