@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class TablaDeSimbolos {
     
-    private List<Terminal> terminal = new ArrayList<>();
-    private List<NoTerminal> noterminal = new ArrayList<>();
+    private ArrayList<Terminal> terminal = new ArrayList<>();
+    private ArrayList<NoTerminal> noterminal = new ArrayList<>();
 
     public List<Terminal> getTerminal() {
         return terminal;

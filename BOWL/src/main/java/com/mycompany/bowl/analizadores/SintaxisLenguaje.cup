@@ -42,8 +42,8 @@ non terminal String VR, NOM, ID, IDT, IDN, COD, CODP, NUMBER, TIPO;
 non terminal Integer NUMBERN;
 non terminal ArrayList<NodoSintactico> PR;
 non terminal TablaDeSimbolos TER;
-non terminal ArrayList<Terminal> T;
-non terminal ArrayList<NoTerminal> N;
+non terminal ListaNodoSintactico<Terminal> T;
+non terminal ListaNodoSintactico<NoTerminal> N;
 non terminal Terminal TE;
 non terminal NoTerminal NO;
 non terminal ListaProducciones PROD;
@@ -119,11 +119,11 @@ TER ::= TER:e1 N:e2 puntocoma {:e1.getNoterminal().addAll(e2); RESULT =e1;:}
 ;
 
 T ::= T:e1 coma IDT:e2 {:e1.add(new Terminal(e2)); RESULT = e1;:}
-    | term TIPO:e2 IDT:e1 {:ArrayList<Terminal> n = new ArrayList<>(); n.add(new Terminal(e1)); RESULT = n;:}
+    | term TIPO:e2 IDT:e1 {:System.out.println("holaaa);ListaNodoSintactico<Terminal> n = new ListaNodoSintactico<>(e2); n.add(new Terminal(e1)); RESULT = n;:}
 ;
 
 N ::= N:e1 coma IDN:e2 {:e1.add(new NoTerminal(e2)); RESULT = e1;:}
-    | no term TIPO:e2 IDN:e1 {:ArrayList<NoTerminal> n = new ArrayList<>(); n.add(new NoTerminal(e1)); RESULT = n;:}
+    | no term TIPO:e2 IDN:e1 {:ListaNodoSintactico<NoTerminal> n = new ListaNodoSintactico<>(e2); n.add(new NoTerminal(e1)); RESULT = n;:}
 ;
 
 PROD ::= PROD:e1 PRODP:e2 {:e1.getProducciones().add(e2); RESULT = e1;:}

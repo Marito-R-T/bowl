@@ -1171,7 +1171,7 @@ class CUP$SintaxisLenguajes$actions {
 		TablaDeSimbolos e1 = (TablaDeSimbolos)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-2)).value;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).right;
-		ArrayList<NoTerminal> e2 = (ArrayList<NoTerminal>)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).value;
+		ListaNodoSintactico<NoTerminal> e2 = (ListaNodoSintactico<NoTerminal>)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).value;
 		e1.getNoterminal().addAll(e2); RESULT =e1;
               CUP$SintaxisLenguajes$result = parser.getSymbolFactory().newSymbol("TER",14, ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.peek()), RESULT);
             }
@@ -1186,7 +1186,7 @@ class CUP$SintaxisLenguajes$actions {
 		TablaDeSimbolos e1 = (TablaDeSimbolos)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-2)).value;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).right;
-		ArrayList<Terminal> e2 = (ArrayList<Terminal>)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).value;
+		ListaNodoSintactico<Terminal> e2 = (ListaNodoSintactico<Terminal>)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).value;
 		e1.getTerminal().addAll(e2); RESULT = e1;
               CUP$SintaxisLenguajes$result = parser.getSymbolFactory().newSymbol("TER",14, ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.peek()), RESULT);
             }
@@ -1198,7 +1198,7 @@ class CUP$SintaxisLenguajes$actions {
               TablaDeSimbolos RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).right;
-		ArrayList<NoTerminal> e1 = (ArrayList<NoTerminal>)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).value;
+		ListaNodoSintactico<NoTerminal> e1 = (ListaNodoSintactico<NoTerminal>)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).value;
 		TablaDeSimbolos t = new TablaDeSimbolos(); t.getNoterminal().addAll(e1); RESULT = t;
               CUP$SintaxisLenguajes$result = parser.getSymbolFactory().newSymbol("TER",14, ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.peek()), RESULT);
             }
@@ -1210,7 +1210,7 @@ class CUP$SintaxisLenguajes$actions {
               TablaDeSimbolos RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).right;
-		ArrayList<Terminal> e1 = (ArrayList<Terminal>)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).value;
+		ListaNodoSintactico<Terminal> e1 = (ListaNodoSintactico<Terminal>)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).value;
 		TablaDeSimbolos t = new TablaDeSimbolos(); t.getTerminal().addAll(e1); RESULT = t;
               CUP$SintaxisLenguajes$result = parser.getSymbolFactory().newSymbol("TER",14, ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)), ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.peek()), RESULT);
             }
@@ -1219,10 +1219,10 @@ class CUP$SintaxisLenguajes$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 38: // T ::= T coma IDT 
             {
-              ArrayList<Terminal> RESULT =null;
+              ListaNodoSintactico<Terminal> RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-2)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-2)).right;
-		ArrayList<Terminal> e1 = (ArrayList<Terminal>)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-2)).value;
+		ListaNodoSintactico<Terminal> e1 = (ListaNodoSintactico<Terminal>)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-2)).value;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.peek()).right;
 		String e2 = (String)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.peek()).value;
@@ -1234,14 +1234,14 @@ class CUP$SintaxisLenguajes$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 39: // T ::= term TIPO IDT 
             {
-              ArrayList<Terminal> RESULT =null;
+              ListaNodoSintactico<Terminal> RESULT =null;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).right;
 		String e2 = (String)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).value;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.peek()).value;
-		ArrayList<Terminal> n = new ArrayList<>(); n.add(new Terminal(e1)); RESULT = n;
+		ListaNodoSintactico<Terminal> n = new ListaNodoSintactico<>(e2); n.add(new Terminal(e1)); RESULT = n;
               CUP$SintaxisLenguajes$result = parser.getSymbolFactory().newSymbol("T",15, ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-2)), ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.peek()), RESULT);
             }
           return CUP$SintaxisLenguajes$result;
@@ -1249,10 +1249,10 @@ class CUP$SintaxisLenguajes$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 40: // N ::= N coma IDN 
             {
-              ArrayList<NoTerminal> RESULT =null;
+              ListaNodoSintactico<NoTerminal> RESULT =null;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-2)).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-2)).right;
-		ArrayList<NoTerminal> e1 = (ArrayList<NoTerminal>)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-2)).value;
+		ListaNodoSintactico<NoTerminal> e1 = (ListaNodoSintactico<NoTerminal>)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-2)).value;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.peek()).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.peek()).right;
 		String e2 = (String)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.peek()).value;
@@ -1264,14 +1264,14 @@ class CUP$SintaxisLenguajes$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 41: // N ::= no term TIPO IDN 
             {
-              ArrayList<NoTerminal> RESULT =null;
+              ListaNodoSintactico<NoTerminal> RESULT =null;
 		int e2left = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).left;
 		int e2right = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).right;
 		String e2 = (String)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-1)).value;
 		int e1left = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.peek()).left;
 		int e1right = ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.peek()).right;
 		String e1 = (String)((java_cup.runtime.Symbol) CUP$SintaxisLenguajes$stack.peek()).value;
-		ArrayList<NoTerminal> n = new ArrayList<>(); n.add(new NoTerminal(e1)); RESULT = n;
+		ListaNodoSintactico<NoTerminal> n = new ListaNodoSintactico<>(e2); n.add(new NoTerminal(e1)); RESULT = n;
               CUP$SintaxisLenguajes$result = parser.getSymbolFactory().newSymbol("N",16, ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.elementAt(CUP$SintaxisLenguajes$top-3)), ((java_cup.runtime.Symbol)CUP$SintaxisLenguajes$stack.peek()), RESULT);
             }
           return CUP$SintaxisLenguajes$result;

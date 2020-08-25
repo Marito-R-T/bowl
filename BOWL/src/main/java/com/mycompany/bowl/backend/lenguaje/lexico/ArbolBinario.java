@@ -11,7 +11,6 @@ import com.mycompany.bowl.backend.lenguaje.lexico.dfa.Transicion;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.Nodo;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoAceptacion;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoConcat;
-import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoTerminal;
 import java.util.List;
 
 /**

@@ -24,6 +24,13 @@ public class IrA {
         this.nodo = nodo;
         this.terminal = nodo instanceof Terminal;
     }
+    
+    public IrA(IrA ira) {
+        this.inicial = ira.getInicial();
+        this.destino = ira.getDestino();
+        this.nodo = ira.getNodo();
+        this.terminal = ira.isTerminal();
+    }
 
     @Override
     public String toString() {

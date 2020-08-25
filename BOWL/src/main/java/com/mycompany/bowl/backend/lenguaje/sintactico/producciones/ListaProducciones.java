@@ -114,16 +114,22 @@ public class ListaProducciones {
             if (ir.isTerminal()) {
                 while (tr && terminales.size() > i) {
                     if (terminales.get(i).getNombre().equals(ir.getNodo().getNombre())) {
-                        tablaTransicion[ir.getInicial().getId() - 1][i] = this.realizarOperacion(ir, ir.isTerminal());
-                        tr = false;
+                        OperacionSintactica op = tablaTransicion[ir.getInicial().getId() - 1][i], op1 = this.realizarOperacion(ir, ir.isTerminal());
+                        if (op1 != null && (op == null || ((op instanceof Shift) && ((Shift) op).parecido((Shift) op1)))) {
+                            tablaTransicion[ir.getInicial().getId() - 1][i] = op1;
+                            tr = false;
+                        }
                     }
                     i++;
                 }
             } else {
                 while (tr && noterminales.size() > i) {
                     if (noterminales.get(i).getNombre().equals(ir.getNodo().getNombre())) {
-                        tablaTransicion[ir.getInicial().getId() - 1][i + this.terminales.size() + 1] = this.realizarOperacion(ir, ir.isTerminal());
-                        tr = false;
+                        OperacionSintactica op = tablaTransicion[ir.getInicial().getId() - 1][i], op1 = this.realizarOperacion(ir, ir.isTerminal());
+                        if (op1 != null && (op == null || ((op instanceof GoTo) && ((GoTo) op).parecido((GoTo) op1)))) {
+                            tablaTransicion[ir.getInicial().getId() - 1][i + this.terminales.size() + 1] = op1;
+                            tr = false;
+                        }
                     }
                     i++;
                 }
@@ -149,7 +155,12 @@ public class ListaProducciones {
                     remove.buscarPro(producciones);
                 }
                 int f = this.posTerminal(remove.getT());
-                this.tablaTransicion[i.getId() - 1][f] = remove;
+                OperacionSintactica op = this.tablaTransicion[i.getId() - 1][f];
+                if (op == null || (op instanceof Remove && ((Remove) op).isIgual(remove))) {
+                    this.tablaTransicion[i.getId() - 1][f] = remove;
+                } else {
+                    
+                }
             }
         }
     }

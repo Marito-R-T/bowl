@@ -10,6 +10,7 @@ import com.mycompany.bowl.backend.lenguaje.lexico.ArbolBinario;
 import com.mycompany.bowl.backend.lenguaje.lexico.Token;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.Nodo;
 import com.mycompany.bowl.backend.lenguaje.sintactico.TablaDeSimbolos;
+import com.mycompany.bowl.backend.lenguaje.sintactico.lalr.OperacionSintactica;
 import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.ListaProducciones;
 
 /**

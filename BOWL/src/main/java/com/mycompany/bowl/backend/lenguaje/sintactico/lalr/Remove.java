@@ -68,4 +68,9 @@ public class Remove extends OperacionSintactica {
         return "R" + (pro + 1);
     }
 
+    @Override
+    public boolean parecido(OperacionSintactica op) {
+        return false;
+    }
+
 }

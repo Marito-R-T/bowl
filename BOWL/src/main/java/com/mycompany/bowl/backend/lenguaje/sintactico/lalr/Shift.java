@@ -7,8 +7,6 @@ package com.mycompany.bowl.backend.lenguaje.sintactico.lalr;
 
 import com.mycompany.bowl.backend.lenguaje.sintactico.NodoSintactico;
 import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.IrA;
-import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.IrAN;
-import java.util.List;
 
 /**
  *
@@ -24,14 +22,25 @@ public class Shift extends OperacionSintactica {
         this.nodo = ira.getNodo();
     }
     
-    public Shift(IrA ira, List<IrAN> j) {
-        this.ira = ira;
-        this.nodo = ira.getNodo();
-    }
-    
     @Override
     public String toString() {
-        return "S"+ira.getDestino().getId();
+        return "S"+ira.getDestino().getId2();
+    }
+
+    @Override
+    public boolean parecido(OperacionSintactica op) {
+        return this.ira.getDestino().equals(((Shift)op).getIra().getDestino())
+                && this.ira.getInicial().equals(((Shift)op).getIra().getInicial())
+                && this.nodo.equals(((Shift) op).getNodo())
+                && this.ira.getNodo().equals(((Shift)op).getIra().getNodo());
+    }
+
+    public IrA getIra() {
+        return ira;
+    }
+
+    public NodoSintactico getNodo() {
+        return nodo;
     }
     
 }

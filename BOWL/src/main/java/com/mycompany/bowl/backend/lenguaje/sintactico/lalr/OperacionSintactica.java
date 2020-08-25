@@ -9,6 +9,8 @@ package com.mycompany.bowl.backend.lenguaje.sintactico.lalr;
  *
  * @author mari2bar
  */
-public class OperacionSintactica {
+public abstract class OperacionSintactica {
+    
+    public abstract boolean parecido(OperacionSintactica op);
     
 }

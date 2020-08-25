@@ -19,7 +19,7 @@ import java.util.List;
 public class I {
 
     private final List<Produccion> producciones = new ArrayList<>();
-    private int id;
+    private int id, pos;
     private boolean marcado = false;
 
     public void setMarcado(boolean marcado) {
@@ -28,6 +28,14 @@ public class I {
 
     public List<Produccion> getProducciones() {
         return producciones;
+    }
+
+    public void setId2(int id2) {
+        this.pos = id2;
+    }
+
+    public int getId2() {
+        return pos;
     }
 
     public int getId() {
@@ -70,6 +78,7 @@ public class I {
 
     public void setId(int id) {
         this.id = id;
+        this.pos = id;
     }
 
     public boolean existeSiguiente(Terminal siguiente, Produccion produccion) {
@@ -131,7 +140,7 @@ public class I {
     
     @Override
     public String toString() {
-        return "I-" + id;
+        return "I-" + id +"/"+pos;
     }
 
     public void agregarSiguientes(List<Produccion> prod) {
