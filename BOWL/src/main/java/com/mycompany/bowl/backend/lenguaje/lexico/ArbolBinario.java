@@ -11,13 +11,14 @@ import com.mycompany.bowl.backend.lenguaje.lexico.dfa.Transicion;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.Nodo;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoAceptacion;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoConcat;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author mari2bar
  */
-public class ArbolBinario {
+public class ArbolBinario implements Serializable {
 
     private final Nodo raiz;
     private List<Estado> estado;
@@ -58,6 +59,7 @@ public class ArbolBinario {
         });
         estado.forEach((est) -> {
             System.out.println(est);
+            nombres[est.getCodigo()] = est.getNombre();
             finales[est.getCodigo()] = est.isAceptado();
         });
     }

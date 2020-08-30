@@ -5,11 +5,13 @@
  */
 package com.mycompany.bowl.backend.lenguaje.sintactico.lalr;
 
+import java.io.Serializable;
+
 /**
  *
  * @author mari2bar
  */
-public abstract class OperacionSintactica {
+public abstract class OperacionSintactica implements Serializable {
     
     public abstract boolean parecido(OperacionSintactica op);
     

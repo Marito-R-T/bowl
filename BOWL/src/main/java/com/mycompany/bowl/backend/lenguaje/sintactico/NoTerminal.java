@@ -6,6 +6,7 @@
 package com.mycompany.bowl.backend.lenguaje.sintactico;
 
 import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.Produccion;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  *
  * @author mari2bar
  */
-public class NoTerminal extends NodoSintactico {
+public class NoTerminal extends NodoSintactico implements Serializable {
     
     private List<Terminal> primeros = new ArrayList<>();
     

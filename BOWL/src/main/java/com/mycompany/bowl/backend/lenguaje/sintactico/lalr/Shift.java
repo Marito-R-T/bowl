@@ -7,12 +7,13 @@ package com.mycompany.bowl.backend.lenguaje.sintactico.lalr;
 
 import com.mycompany.bowl.backend.lenguaje.sintactico.NodoSintactico;
 import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.IrA;
+import java.io.Serializable;
 
 /**
  *
  * @author mari2bar
  */
-public class Shift extends OperacionSintactica {
+public class Shift extends OperacionSintactica implements Serializable {
     
     private final IrA ira;
     private final NodoSintactico nodo;

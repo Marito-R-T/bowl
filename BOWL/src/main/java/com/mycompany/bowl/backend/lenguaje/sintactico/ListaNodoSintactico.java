@@ -5,6 +5,7 @@
  */
 package com.mycompany.bowl.backend.lenguaje.sintactico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  * @author mari2bar
  * @param <T>
  */
-public class ListaNodoSintactico<T> extends ArrayList<T> {
+public class ListaNodoSintactico<T> extends ArrayList<T> implements Serializable {
 
     private String tipo;
     

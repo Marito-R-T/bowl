@@ -7,13 +7,14 @@ package com.mycompany.bowl.backend.lenguaje.sintactico.producciones;
 
 import com.mycompany.bowl.backend.lenguaje.sintactico.NoTerminal;
 import com.mycompany.bowl.backend.lenguaje.sintactico.NodoSintactico;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author mari2bar
  */
-public class ProduccionInicial extends Produccion{
+public class ProduccionInicial extends Produccion implements Serializable {
     
     public ProduccionInicial(ArrayList<NodoSintactico> sintactico) {
         super(new NoTerminal("SP"), sintactico);

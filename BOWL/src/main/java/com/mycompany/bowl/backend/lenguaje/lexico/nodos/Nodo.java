@@ -5,6 +5,7 @@
  */
 package com.mycompany.bowl.backend.lenguaje.lexico.nodos;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author mari2bar
  */
-public abstract class Nodo {
+public abstract class Nodo implements Serializable{
 
     protected final List<Nodo> primerapos = new ArrayList<>(), ultimapos = new ArrayList<>();
     protected boolean anulable;

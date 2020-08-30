@@ -41,6 +41,7 @@ public class SintaxisLenguajesSym {
   public static final int id = 44;
   public static final int dpp = 36;
   public static final int y = 12;
+  public static final int llavecp = 48;
   public static final int mult = 21;
   public static final int pre = 31;
   public static final int corchetec = 17;
@@ -104,7 +105,8 @@ public class SintaxisLenguajesSym {
   "id",
   "idn",
   "caracterma",
-  "caracterme"
+  "caracterme",
+  "llavecp"
   };
 }
 

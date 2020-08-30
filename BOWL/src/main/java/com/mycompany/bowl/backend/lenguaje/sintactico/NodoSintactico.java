@@ -5,11 +5,13 @@
  */
 package com.mycompany.bowl.backend.lenguaje.sintactico;
 
+import java.io.Serializable;
+
 /**
  *
  * @author mari2bar
  */
-public class NodoSintactico {
+public class NodoSintactico implements Serializable {
     
     protected final String id, nombre;
     private String tipo;

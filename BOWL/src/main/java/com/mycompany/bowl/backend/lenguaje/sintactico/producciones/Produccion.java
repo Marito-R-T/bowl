@@ -9,6 +9,7 @@ import com.mycompany.bowl.backend.lenguaje.sintactico.Aceptacion;
 import com.mycompany.bowl.backend.lenguaje.sintactico.NoTerminal;
 import com.mycompany.bowl.backend.lenguaje.sintactico.NodoSintactico;
 import com.mycompany.bowl.backend.lenguaje.sintactico.Terminal;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
  *
  * @author mari2bar
  */
-public class Produccion {
+public class Produccion implements Serializable {
 
     private final NoTerminal productora;
     private final List<NodoSintactico> producidos;
@@ -124,12 +125,12 @@ public class Produccion {
 
     public boolean revisarEx(List<Terminal> t, Terminal prod) {
         for (Terminal terminal : t) {
-            if (!(prod instanceof Aceptacion)) {
+            if (prod instanceof Aceptacion && terminal instanceof Aceptacion) {
+                return true;
+            }  else if (!(prod instanceof Aceptacion) && !(terminal instanceof Aceptacion)) {
                 if (terminal.getNombre().equals(prod.getNombre())) {
                     return true;
                 }
-            } else if (prod instanceof Aceptacion && terminal instanceof Aceptacion) {
-                return true;
             }
         }
         return false;
@@ -151,12 +152,12 @@ public class Produccion {
                 && p.getPospunto() == this.pospunto
                 && this.producidosIgual(p.getProducidos());
     }
-    
+
     public boolean esSim(Produccion p) {
         return p.getPrimerNodo().getNombre().equals(this.getPrimerNodo().getNombre())
                 && this.producidosIgual(p.getProducidos());
     }
-    
+
     public boolean producidosIgual(List<NodoSintactico> n) {
         if (n.size() == this.producidos.size()) {
             for (int i = 0; i < n.size(); i++) {
@@ -177,10 +178,10 @@ public class Produccion {
 
     public void agregarSiguientes(List<Terminal> sig) {
         for (Terminal terminal : sig) {
-            if(!this.siguientes.contains(terminal)){
+            if (!this.siguientes.contains(terminal)) {
                 this.siguientes.add(terminal);
             }
         }
     }
-    
+
 }

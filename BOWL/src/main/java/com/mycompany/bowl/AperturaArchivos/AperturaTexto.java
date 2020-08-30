@@ -8,12 +8,10 @@ package com.mycompany.bowl.AperturaArchivos;
 import com.mycompany.bowl.GUI.BowlGUI;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *

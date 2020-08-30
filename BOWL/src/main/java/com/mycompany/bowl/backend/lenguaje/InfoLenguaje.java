@@ -5,11 +5,13 @@
  */
 package com.mycompany.bowl.backend.lenguaje;
 
+import java.io.Serializable;
+
 /**
  *
  * @author moise
  */
-public class InfoLenguaje {
+public class InfoLenguaje implements Serializable {
 
     private String nombre, version, autor, extension;
     private Integer lanzamiento;

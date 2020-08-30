@@ -56,6 +56,7 @@ Number = ({OneNine}|{cero})
 <YYINITIAL> ("{") {return new Symbol(SintaxisLenguajesSym.llavea, yycolumn, yyline, yytext());}
 <YYINITIAL> ("&") {return new Symbol(SintaxisLenguajesSym.y, yycolumn, yyline, yytext());}
 <YYINITIAL> ("}") {return new Symbol(SintaxisLenguajesSym.llavec, yycolumn, yyline, yytext());}
+<YYINITIAL> ("};") {return new Symbol(SintaxisLenguajesSym.llavecp, yycolumn, yyline, yytext());}
 <YYINITIAL> ("%d") {return new Symbol(SintaxisLenguajesSym.pord, yycolumn, yyline, yytext());}
 <YYINITIAL> (",") {return new Symbol(SintaxisLenguajesSym.coma, yycolumn, yyline, yytext());}
 <YYINITIAL> ("=") {return new Symbol(SintaxisLenguajesSym.igual, yycolumn, yyline, yytext());}

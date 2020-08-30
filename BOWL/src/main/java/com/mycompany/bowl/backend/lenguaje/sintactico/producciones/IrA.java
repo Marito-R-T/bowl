@@ -7,12 +7,13 @@ package com.mycompany.bowl.backend.lenguaje.sintactico.producciones;
 
 import com.mycompany.bowl.backend.lenguaje.sintactico.NodoSintactico;
 import com.mycompany.bowl.backend.lenguaje.sintactico.Terminal;
+import java.io.Serializable;
 
 /**
  *
  * @author mari2bar
  */
-public class IrA {
+public class IrA implements Serializable {
 
     private I inicial, destino;
     private NodoSintactico nodo;

@@ -5,11 +5,13 @@
  */
 package com.mycompany.bowl.backend.lenguaje.lexico.dfa;
 
+import java.io.Serializable;
+
 /**
  *
  * @author mari2bar
  */
-public class Transicion {
+public class Transicion implements Serializable {
     
     private final Estado inicio;
     private final char caracter;

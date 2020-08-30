@@ -5,11 +5,13 @@
  */
 package com.mycompany.bowl.backend.lenguaje.sintactico;
 
+import java.io.Serializable;
+
 /**
  *
  * @author mari2bar
  */
-public class Aceptacion extends Terminal {
+public class Aceptacion extends Terminal implements Serializable {
     
     public Aceptacion() {
         super(null);

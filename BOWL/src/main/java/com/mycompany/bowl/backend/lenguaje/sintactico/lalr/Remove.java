@@ -7,13 +7,14 @@ package com.mycompany.bowl.backend.lenguaje.sintactico.lalr;
 
 import com.mycompany.bowl.backend.lenguaje.sintactico.Terminal;
 import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.Produccion;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author mari2bar
  */
-public class Remove extends OperacionSintactica {
+public class Remove extends OperacionSintactica implements Serializable {
 
     private final Produccion pr;
     private final Terminal t;
@@ -29,11 +30,7 @@ public class Remove extends OperacionSintactica {
             return true;
         } else if (this instanceof Aceptar || rem instanceof Aceptar) {
             return false;
-        } else if (this.pro == rem.getPro()) {
-            return true;
-        } else {
-            return false;
-        }
+        } else return rem != null && this.pro == rem.getPro();
     }
 
     public int getPro() {

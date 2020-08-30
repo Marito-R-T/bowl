@@ -5,11 +5,13 @@
  */
 package com.mycompany.bowl.backend.lenguaje.lexico;
 
+import java.io.Serializable;
+
 /**
  *
  * @author mari2bar
  */
-public class Token {
+public class Token implements Serializable {
 
     private final int line;
     private final int column;
@@ -17,6 +19,7 @@ public class Token {
     private final boolean ultimo;
     private final int lines;
     private final int columnf;
+    private int nivel;
     private final String token;
     private final String nombre;
     
@@ -29,6 +32,14 @@ public class Token {
         this.token = token;
         this.nombre = nombre;
         this.ultimo = ultimo;
+    }
+
+    public int getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(int nivel) {
+        this.nivel = nivel;
     }
 
     public int getLine() {
@@ -62,7 +73,7 @@ public class Token {
     @Override
     public String toString(){
         return "nombre: "+ this.nombre+" line: " + 
-                this.line + " column: " + this.column + " size: " + this.tamano + " token: " + this.token;
+                this.line + " column: " + this.column + " size: " + this.tamano + " token: " + this.token + " final: " + this.ultimo;
     }
 
     public String getNombre() {

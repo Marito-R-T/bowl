@@ -13,6 +13,7 @@ import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.I;
 import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.IrA;
 import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.IrAN;
 import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.ListaProducciones;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import java.util.List;
  *
  * @author mari2bar
  */
-public class LALR {
+public class LALR implements Serializable {
 
     private List<IrA> tabla, ira;
     private final List<I> herradura;
@@ -62,11 +63,10 @@ public class LALR {
             while (j < herradura.size()) {
                 if (herradura.get(i).esSimilar(herradura.get(j))) {
                     I n = eliminados.remove(j);
-                    System.out.println(herradura.get(i) + "^^^^" + n);
                     this.remplazarDestinos(n, eliminados.get(i));
                     this.remplazarPrimeros(n, eliminados.get(i));
                     if (realizarTabla()) {
-                        System.out.println("holaaaaa");
+                        herradura.get(i).agregarSiguientes(n.getProducciones());
                         herradura.remove(n);
                         this.realizarirA();
                         i = 0;
@@ -188,15 +188,24 @@ public class LALR {
                 if (remove.getT() != null) {
                     remove.buscarPro(prod.getProducciones());
                 }
-                int f = prod.posTerminal(remove.getT());
-                OperacionSintactica op = this.tablaTransicion[i.getId2() - 1][f];
+                int[] f = prod.posTerminal(remove.getT());
+                OperacionSintactica op = this.tablaTransicion[i.getId2() - 1][f[0]];
                 if (op == null || (op instanceof Remove && ((Remove) op).isIgual(remove))) {
-                    this.tablaTransicion[i.getId2() - 1][f] = remove;
-                } else {
-                    return false;
-                }
+                    this.tablaTransicion[i.getId2() - 1][f[0]] = remove;
+                } else if (op instanceof Shift && i.getNivel()<=f[1]) {
+                    this.tablaTransicion[i.getId() - 1][f[0]] = remove;
+                }/* else {
+                    System.out.println(remove);
+                    System.out.println(f);
+                    System.out.println(op);
+                    this.tablaTransicion[i.getId() - 1][f[0]] = remove;
+                }*/
             }
         }
         return true;
+    }
+
+    public OperacionSintactica[][] getTablaTransicion() {
+        return tablaTransicion;
     }
 }

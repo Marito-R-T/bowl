@@ -5,13 +5,14 @@
  */
 package com.mycompany.bowl.backend.lenguaje.lexico.nodos;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author mari2bar
  */
-public class NodoConcat extends Nodo {
+public class NodoConcat extends Nodo implements Serializable {
 
     private Nodo nodo1, nodo2;
 

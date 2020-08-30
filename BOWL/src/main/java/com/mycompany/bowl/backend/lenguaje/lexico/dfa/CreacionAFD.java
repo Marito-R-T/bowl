@@ -9,6 +9,7 @@ import com.mycompany.bowl.backend.lenguaje.lexico.ArbolBinario;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.Nodo;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoAceptacion;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoTerminal;
+import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,7 +18,7 @@ import java.util.HashSet;
  *
  * @author mari2bar
  */
-public class CreacionAFD {
+public class CreacionAFD implements Serializable {
 
     private final List<Estado> D;
     private final List<Estado> DM;

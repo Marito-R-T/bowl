@@ -5,6 +5,7 @@
  */
 package com.mycompany.bowl.backend.lenguaje.lexico.nodos;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author mari2bar
  */
-public class NodoTerminal extends Nodo {
+public class NodoTerminal extends Nodo implements Serializable {
 
     private char codigoin, codigofin;
     private final List<Nodo> siguientepos = new ArrayList<>();

@@ -7,12 +7,13 @@ package com.mycompany.bowl.backend.lenguaje.sintactico.lalr;
 
 import com.mycompany.bowl.backend.lenguaje.sintactico.Terminal;
 import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.Produccion;
+import java.io.Serializable;
 
 /**
  *
  * @author mari2bar
  */
-public class Aceptar extends Remove {
+public class Aceptar extends Remove implements Serializable {
     
     public Aceptar(Produccion pr, Terminal t) {
         super(pr, t);

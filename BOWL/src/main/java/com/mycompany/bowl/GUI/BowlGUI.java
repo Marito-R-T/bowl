@@ -10,9 +10,11 @@ import com.mycompany.bowl.AperturaArchivos.GuardadoTexto;
 import com.mycompany.bowl.analizadores.LexicoLenguaje;
 import com.mycompany.bowl.analizadores.SintaxisLenguajes;
 import com.mycompany.bowl.backend.lenguaje.Lenguaje;
-import com.mycompany.bowl.backend.lenguaje.lexico.Token;
+import java.awt.Color;
 import java.io.File;
 import java.io.StringReader;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -25,6 +27,9 @@ public class BowlGUI extends javax.swing.JFrame {
 
     private final AperturaTexto apertura;
     private final GuardadoTexto guardado;
+    private ItemLenguaje seleccionado;
+    private final TablaHTML tablahtml;
+    private final PilaFrame pila;
 
     /**
      * Creates new form BowlGUI
@@ -32,6 +37,10 @@ public class BowlGUI extends javax.swing.JFrame {
     public BowlGUI() {
         apertura = new AperturaTexto();
         guardado = new GuardadoTexto();
+        tablahtml = new TablaHTML(this);
+        tablahtml.setVisible(false);
+        pila = new PilaFrame(this);
+        pila.setVisible(false);
         initComponents();
         this.setLocationRelativeTo(null);
     }
@@ -49,19 +58,29 @@ public class BowlGUI extends javax.swing.JFrame {
         lblSeleccionado = new javax.swing.JLabel();
         tabbedTexto = new javax.swing.JTabbedPane();
         lblColFil = new javax.swing.JLabel();
-        jMenuBar1 = new javax.swing.JMenuBar();
+        menuBar = new javax.swing.JMenuBar();
         menuArchivo = new javax.swing.JMenu();
         itemAbrir = new javax.swing.JMenuItem();
         itemNuevo = new javax.swing.JMenuItem();
         itemGuardar = new javax.swing.JMenuItem();
         itemGuardarComo = new javax.swing.JMenuItem();
+        itemCerrar = new javax.swing.JMenuItem();
         itemSalir = new javax.swing.JMenuItem();
         menuLenguajes = new javax.swing.JMenu();
         menuEjecutar = new javax.swing.JMenu();
         itemCargarLenguaje = new javax.swing.JMenuItem();
+        itemCompilar = new javax.swing.JMenuItem();
+        menuBorrar = new javax.swing.JMenu();
         menuVer = new javax.swing.JMenu();
+        itemLALR = new javax.swing.JMenuItem();
+        itemPila = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        pnlPrincipal.setBackground(new java.awt.Color(89, 89, 89));
+
+        lblSeleccionado.setFont(new java.awt.Font("DejaVu Sans Condensed", 1, 14)); // NOI18N
+        lblSeleccionado.setForeground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout pnlPrincipalLayout = new javax.swing.GroupLayout(pnlPrincipal);
         pnlPrincipal.setLayout(pnlPrincipalLayout);
@@ -123,6 +142,14 @@ public class BowlGUI extends javax.swing.JFrame {
         });
         menuArchivo.add(itemGuardarComo);
 
+        itemCerrar.setText("Cerrar Texto");
+        itemCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemCerrarActionPerformed(evt);
+            }
+        });
+        menuArchivo.add(itemCerrar);
+
         itemSalir.setText("Salir");
         itemSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -131,10 +158,10 @@ public class BowlGUI extends javax.swing.JFrame {
         });
         menuArchivo.add(itemSalir);
 
-        jMenuBar1.add(menuArchivo);
+        menuBar.add(menuArchivo);
 
         menuLenguajes.setText("Lenguajes");
-        jMenuBar1.add(menuLenguajes);
+        menuBar.add(menuLenguajes);
 
         menuEjecutar.setText("Ejecutar");
 
@@ -146,12 +173,40 @@ public class BowlGUI extends javax.swing.JFrame {
         });
         menuEjecutar.add(itemCargarLenguaje);
 
-        jMenuBar1.add(menuEjecutar);
+        itemCompilar.setText("Compilar");
+        itemCompilar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemCompilarActionPerformed(evt);
+            }
+        });
+        menuEjecutar.add(itemCompilar);
+
+        menuBorrar.setText("Borrar Lenguaje");
+        menuEjecutar.add(menuBorrar);
+
+        menuBar.add(menuEjecutar);
 
         menuVer.setText("Ver");
-        jMenuBar1.add(menuVer);
 
-        setJMenuBar(jMenuBar1);
+        itemLALR.setText("Tabla LALR");
+        itemLALR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemLALRActionPerformed(evt);
+            }
+        });
+        menuVer.add(itemLALR);
+
+        itemPila.setText("Pila");
+        itemPila.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemPilaActionPerformed(evt);
+            }
+        });
+        menuVer.add(itemPila);
+
+        menuBar.add(menuVer);
+
+        setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -178,22 +233,43 @@ public class BowlGUI extends javax.swing.JFrame {
             NumeroLinea linea = new NumeroLinea(area);
             pane.setViewportView(area);
             pane.setRowHeaderView(linea);
-
             tabbedTexto.addTab(file.getName(), null, pane, file.getPath());
         }
     }//GEN-LAST:event_itemAbrirActionPerformed
+
 
     private void itemCargarLenguajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCargarLenguajeActionPerformed
         try {
             // TODO add your handling code here:
             String s = apertura.leerTexto(tabbedTexto.getToolTipTextAt(tabbedTexto.getSelectedIndex()));
-            SintaxisLenguajes lenguajes = new SintaxisLenguajes(new LexicoLenguaje(new StringReader(s)));
-            Lenguaje len = (Lenguaje) lenguajes.parse().value;
-            Token tok;
+            SintaxisLenguajes lengua = new SintaxisLenguajes(new LexicoLenguaje(new StringReader(s)));
+            Lenguaje len = (Lenguaje) lengua.parse().value;
+            if (len != null) {
+                boolean encontrado = false;
+                ItemLenguaje leng = null;
+                for (int i = 0; i < menuLenguajes.getItemCount(); i++) {
+                    leng = (ItemLenguaje) menuLenguajes.getItem(i);
+                    if (leng.getLenguaje().getInfo().getNombre().equals(len.getInfo().getNombre())) {
+                        encontrado = true;
+                        break;
+                    }
+                }
+                if (!encontrado) {
+                    ItemLenguaje item = new ItemLenguaje(len, this), item2 = new ItemLenguaje(len, this, true);
+                    item.setHermano(item2);
+                    item2.setHermano(item);
+                    menuLenguajes.add(item);
+                    menuBorrar.add(item2);
+                } else if (leng != null) {
+                    leng.cambiarLenguaje(len);
+                }
+            }
+            //len.getAnalisis().analizarSintactico("4+9*3/5+3");
+            /*Token tok;
             do {                
-                tok = len.analizarTexto("**=");
+                tok = len.getAnalisis().analizarTexto("**=");
                 System.out.println(tok);
-            } while (tok!=null && !tok.isUltimo());
+            } while (tok!=null && !tok.isUltimo());*/
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -237,6 +313,26 @@ public class BowlGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_itemGuardarActionPerformed
 
+    public JMenu getMenuBorrar() {
+        return menuBorrar;
+    }
+
+    public JMenu getMenuLenguajes() {
+        return menuLenguajes;
+    }
+
+    public ItemLenguaje getSeleccionado() {
+        return seleccionado;
+    }
+
+    public void setSeleccionado(ItemLenguaje seleccionado) {
+        this.seleccionado = seleccionado;
+    }
+
+    public JLabel getLblSeleccionado() {
+        return lblSeleccionado;
+    }
+
     private void itemNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemNuevoActionPerformed
         // TODO add your handling code here:
         JScrollPane pane = new JScrollPane();
@@ -248,18 +344,69 @@ public class BowlGUI extends javax.swing.JFrame {
         tabbedTexto.addTab(null, null, pane, null);
     }//GEN-LAST:event_itemNuevoActionPerformed
 
+    private void itemCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCompilarActionPerformed
+        // TODO add your handling code here:
+        String extension = tabbedTexto.getTitleAt(tabbedTexto.getSelectedIndex());
+        int ex = extension.lastIndexOf('.') + 1;
+        if (ex < extension.length()) {
+            extension = extension.substring(ex);
+            System.out.println("extension: " + extension);
+            if (this.seleccionado != null && extension.equals(this.seleccionado.getLenguaje().getInfo().getExtension())) {
+                String s = apertura.leerTexto(tabbedTexto.getToolTipTextAt(tabbedTexto.getSelectedIndex()));
+                this.seleccionado.getLenguaje().getAnalisis().analizarSintactico(s);
+            } else {
+                JOptionPane.showMessageDialog(this, "La extesión no coincide con el Lenguaje Seleccionado.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "No tiene extensión o tiene un nombre que no se acepta");
+        }
+    }//GEN-LAST:event_itemCompilarActionPerformed
+
+    private void itemLALRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemLALRActionPerformed
+        // TODO add your handling code here:
+        if (this.seleccionado != null) {
+            tablahtml.setVisible(true);
+            tablahtml.agregarTabla(this.seleccionado.getLenguaje());
+        }
+    }//GEN-LAST:event_itemLALRActionPerformed
+
+    private void itemCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCerrarActionPerformed
+        // TODO add your handling code here:
+        if (JOptionPane.showConfirmDialog(this, "¿Esta seguro de cerrar esta pestaña?", this.tabbedTexto.getTitleAt(tabbedTexto.getSelectedIndex()), JOptionPane.OK_OPTION)
+                == JOptionPane.OK_OPTION) {
+            if (JOptionPane.showConfirmDialog(this, "¿Desea guardar los datos de la pestaña?", this.tabbedTexto.getTitleAt(tabbedTexto.getSelectedIndex()), JOptionPane.OK_OPTION)
+                    == JOptionPane.OK_OPTION) {
+                this.itemGuardarActionPerformed(evt);
+            }
+            this.tabbedTexto.removeTabAt(tabbedTexto.getSelectedIndex());
+        }
+    }//GEN-LAST:event_itemCerrarActionPerformed
+
+    private void itemPilaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemPilaActionPerformed
+        // TODO add your handling code here:
+        if (this.seleccionado != null && this.seleccionado.getLenguaje().getAnalisis().getPila()!= null) {
+            this.pila.setVisible(true);
+            this.pila.iniciarPanel();
+        }
+    }//GEN-LAST:event_itemPilaActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem itemAbrir;
     private javax.swing.JMenuItem itemCargarLenguaje;
+    private javax.swing.JMenuItem itemCerrar;
+    private javax.swing.JMenuItem itemCompilar;
     private javax.swing.JMenuItem itemGuardar;
     private javax.swing.JMenuItem itemGuardarComo;
+    private javax.swing.JMenuItem itemLALR;
     private javax.swing.JMenuItem itemNuevo;
+    private javax.swing.JMenuItem itemPila;
     private javax.swing.JMenuItem itemSalir;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JLabel lblColFil;
     private javax.swing.JLabel lblSeleccionado;
     private javax.swing.JMenu menuArchivo;
+    private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenu menuBorrar;
     private javax.swing.JMenu menuEjecutar;
     private javax.swing.JMenu menuLenguajes;
     private javax.swing.JMenu menuVer;

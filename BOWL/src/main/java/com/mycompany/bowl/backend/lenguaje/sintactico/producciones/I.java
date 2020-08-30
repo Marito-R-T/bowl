@@ -9,6 +9,7 @@ import com.mycompany.bowl.backend.lenguaje.sintactico.Aceptacion;
 import com.mycompany.bowl.backend.lenguaje.sintactico.Terminal;
 import com.mycompany.bowl.backend.lenguaje.sintactico.lalr.Aceptar;
 import com.mycompany.bowl.backend.lenguaje.sintactico.lalr.Remove;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,11 +17,20 @@ import java.util.List;
  *
  * @author mari2bar
  */
-public class I {
+public class I implements Serializable {
 
     private final List<Produccion> producciones = new ArrayList<>();
     private int id, pos;
     private boolean marcado = false;
+    private int nivel;
+
+    public int getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(int nivel) {
+        this.nivel = nivel;
+    }
 
     public void setMarcado(boolean marcado) {
         this.marcado = marcado;
@@ -45,7 +55,7 @@ public class I {
     public List<Remove> verRemoves() {
         List<Remove> r = new ArrayList<>();
         for (Produccion produccion : producciones) {
-            if (produccion instanceof ProduccionInicial && produccion.getPospunto()==1) {
+            if (produccion instanceof ProduccionInicial && produccion.getPospunto() == 1) {
                 Aceptar nuevo = new Aceptar(produccion, null);
                 r.add(nuevo);
             } else {
@@ -83,12 +93,12 @@ public class I {
 
     public boolean existeSiguiente(Terminal siguiente, Produccion produccion) {
         for (Terminal siguiente1 : produccion.getSiguientes()) {
-            if (!(siguiente instanceof Aceptacion)) {
+            if (siguiente instanceof Aceptacion && siguiente1 instanceof Aceptacion) {
+                return true;
+            } else if (!(siguiente instanceof Aceptacion) && !(siguiente1 instanceof Aceptacion)) {
                 if (siguiente1.getNombre().equals(siguiente.getNombre())) {
                     return true;
                 }
-            } else if (siguiente instanceof Aceptacion && siguiente1 instanceof Aceptacion) {
-                return true;
             }
         }
         return false;
@@ -106,7 +116,7 @@ public class I {
             return false;
         }
     }
-    
+
     public boolean esSimilar(I similar) {
         if (similar.getProducciones().size() == this.producciones.size()) {
             for (Produccion produccion : similar.getProducciones()) {
@@ -137,20 +147,20 @@ public class I {
         }
         return false;
     }
-    
+
     @Override
     public String toString() {
-        return "I-" + id +"/"+pos;
+        return "I-" + id + "/" + pos;
     }
 
     public void agregarSiguientes(List<Produccion> prod) {
         for (Produccion produccion : prod) {
             for (Produccion produccione : producciones) {
-                if(produccion.esSim(produccion)){
+                if (produccion.esSim(produccion)) {
                     produccione.agregarSiguientes(produccion.getSiguientes());
                 }
             }
         }
-    } 
-    
+    }
+
 }

@@ -15,6 +15,7 @@ import com.mycompany.bowl.backend.lenguaje.sintactico.lalr.GoTo;
 import com.mycompany.bowl.backend.lenguaje.sintactico.lalr.OperacionSintactica;
 import com.mycompany.bowl.backend.lenguaje.sintactico.lalr.Remove;
 import com.mycompany.bowl.backend.lenguaje.sintactico.lalr.Shift;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ import java.util.List;
  *
  * @author mari2bar
  */
-public class ListaProducciones {
+public class ListaProducciones implements Serializable {
 
     private final List<Produccion> producciones;
     private List<NoTerminal> noterminales;
@@ -69,6 +70,7 @@ public class ListaProducciones {
 
             }
             I nuevo = new I();
+            nuevo.setNivel(0);
             Produccion p = new ProduccionInicial(producciones.get(0));
             p.setPospunto(0);
             nuevo.getProducciones().add(p);
@@ -76,9 +78,6 @@ public class ListaProducciones {
             nuevo = this.cerradura(nuevo);
             herradura.add(nuevo);
             this.ir_a(nuevo);
-            for (IrA irA : this.tabla) {
-                System.out.println(irA);
-            }
             tablaTransicion = new OperacionSintactica[herradura.size()][noterminales.size() + terminales.size() + 1];
             this.realizarGotoShift();
             this.realizarRemove();
@@ -98,6 +97,7 @@ public class ListaProducciones {
             }
             lalr = new LALR(herradura, terminales.size(), noterminales.size(), this);
             lalr.analizarLALR();
+            this.tablaTransicion = lalr.getTablaTransicion();
         } else {
 
         }
@@ -154,31 +154,38 @@ public class ListaProducciones {
                 if (remove.getT() != null) {
                     remove.buscarPro(producciones);
                 }
-                int f = this.posTerminal(remove.getT());
-                OperacionSintactica op = this.tablaTransicion[i.getId() - 1][f];
+                int[] f = this.posTerminal(remove.getT());
+                OperacionSintactica op = this.tablaTransicion[i.getId() - 1][f[0]];
                 if (op == null || (op instanceof Remove && ((Remove) op).isIgual(remove))) {
-                    this.tablaTransicion[i.getId() - 1][f] = remove;
-                } else {
-                    
+                    this.tablaTransicion[i.getId() - 1][f[0]] = remove;
+                } else if (op instanceof Shift && i.getNivel()<=f[1]) {
+                    this.tablaTransicion[i.getId() - 1][f[0]] = remove;
                 }
             }
         }
     }
 
-    public int posTerminal(Terminal t) {
+    public int[] posTerminal(Terminal t) {
+        int[] in = new int[2];
         if (t == null) {
-            return terminales.size();
+            in[0] = terminales.size();
+            in[1] = 0;
+            return in;
         }
         if (t instanceof Aceptacion) {
-            return terminales.size();
+            in[0] = terminales.size();
+            in[1] = 0;
+            return in;
         } else {
             for (int i = 0; i < terminales.size(); i++) {
                 if (t.getNombre().equals(terminales.get(i).getNombre())) {
-                    return i;
+                    in[0] = i;
+                    in[1] = terminales.get(i).getNivel();
+                    return in;
                 }
             }
         }
-        return 0;
+        return in;
     }
 
     public I cerradura(I nuevo) {
@@ -211,6 +218,7 @@ public class ListaProducciones {
     public void ir_a(I estado) {
         for (NoTerminal terminale : noterminales) {
             I nuevo = new I();
+            nuevo.setNivel(estado.getNivel());
             for (Produccion produccion : estado.getProducciones()) {
                 if (produccion.getProducidos().size() > produccion.getPospunto()
                         && terminale.getNombre().equals(produccion.getProducidos().get(produccion.getPospunto()).getNombre())) {
@@ -245,6 +253,7 @@ public class ListaProducciones {
         }
         for (Terminal terminale : terminales) {
             I nuevo = new I();
+            nuevo.setNivel(terminale.getNivel());
             for (Produccion produccion : estado.getProducciones()) {
                 if (produccion.getProducidos().size() > produccion.getPospunto()
                         && terminale.getNombre().equals(produccion.getProducidos().get(produccion.getPospunto()).getNombre())) {
@@ -312,7 +321,6 @@ public class ListaProducciones {
         }
         for (NoTerminal noterminale : noterminales) {
             if (n.getNombre().equals(noterminale.getNombre())) {
-                System.out.println(noterminale.getPrimeros().size());
                 t.addAll(noterminale.getPrimeros());
                 return t;
             }
@@ -322,6 +330,10 @@ public class ListaProducciones {
 
     public List<Terminal> getTerminales() {
         return terminales;
+    }
+
+    public OperacionSintactica[][] getTablaTransicion() {
+        return tablaTransicion;
     }
 
 }

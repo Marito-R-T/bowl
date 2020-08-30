@@ -6,8 +6,8 @@
 package com.mycompany.bowl.backend.lenguaje.lexico.dfa;
 
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.Nodo;
-import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoAceptacion;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoTerminal;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author mari2bar
  */
-public class Estado {
+public class Estado implements Serializable {
 
     private boolean marcado = false;
     private boolean aceptado;

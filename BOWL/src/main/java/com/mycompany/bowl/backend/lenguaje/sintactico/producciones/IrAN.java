@@ -5,11 +5,13 @@
  */
 package com.mycompany.bowl.backend.lenguaje.sintactico.producciones;
 
+import java.io.Serializable;
+
 /**
  *
  * @author mari2bar
  */
-public class IrAN {
+public class IrAN implements Serializable {
     
     private I nuevo, ultimo;
     

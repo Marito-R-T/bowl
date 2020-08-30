@@ -5,13 +5,14 @@
  */
 package com.mycompany.bowl.backend.lenguaje.lexico.nodos;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author mari2bar
  */
-public class NodoAsterisco extends Nodo {
+public class NodoAsterisco extends Nodo implements Serializable {
 
     private Nodo nodo;
 
