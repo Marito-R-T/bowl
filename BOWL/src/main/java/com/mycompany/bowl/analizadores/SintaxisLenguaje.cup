@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.mycompany.bowl.backend.lenguaje.sintactico.*;
 import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.*;
+import com.mycompany.bowl.backend.lenguaje.semantico.Semantico;
 
 class SintaxisLenguajes;
 
@@ -34,7 +35,7 @@ terminal String or, version, autor, lanzamiento, extension, term, no, result;
 terminal String llavea, llavec, y, pord, coma, igual, corchetea, corchetec, parentesisa, parentesisc;
 terminal String mas, mult, menos, div, percent, puntocoma, dosp, lin, tab, esp, comilla, pre, punto;
 terminal String codigo, nom, pp, dpp, printf, str, entero, real, cadena;
-terminal String number, idt, id, idn, caracterma, caracterme, llavecp;
+terminal String number, idt, id, idn, caracterma, caracterme, llavecp, e;
 
 non terminal Lenguaje S;
 non terminal InfoLenguaje INFO, INFOP;
@@ -50,7 +51,7 @@ non terminal ListaProducciones PROD;
 non terminal Produccion PRODP;
 non terminal Nodo REG, REGP, REGPP, RC, RCP, EXP, EXPP;
 non terminal O;
-non terminal SEM;
+non terminal Semantico SEM;
 non terminal RES, OP, OPP;
 /*non terminal List<ArbolBinario> ;
 non terminal ArbolBinario ;*/
@@ -59,7 +60,7 @@ start with S;
 
 S ::= INFO:e1 pp COD:e2 pp EXP:e3 pp TER:e4 pp PROD:e5 {:Lenguaje lenguaje = new Lenguaje(); lenguaje.setInfo(e1); lenguaje.realizarCodigo(e2); lenguaje.setBinario(e3); 
                                                             lenguaje.setTablaSimbolos(e4); lenguaje.setProducciones(e5); RESULT = lenguaje;:}                                                       
-    | error S:e1 {:RESULT = e1;:}                                                      
+                                                          
 ;
 
 INFO ::= INFO:e1 INFOP:e2 {:e1.ingresarDato(e2); RESULT = e1;:}
@@ -67,7 +68,7 @@ INFO ::= INFO:e1 INFOP:e2 {:e1.ingresarDato(e2); RESULT = e1;:}
     | error pp {:RESULT = null;:}
 ;
 
-INFOP ::= nom dosp NOM:e1 puntocoma {:System.out.println(e1); InfoLenguaje info = new InfoLenguaje(); info.setNombre(e1);RESULT = info;:}
+INFOP ::= nom dosp NOM:e1 puntocoma {:System.out.println(e1); InfoLenguaje info = new InfoLenguaje(); info.setNombre(e1); RESULT = info;:}
     | version dosp VR:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setVersion(e1); RESULT = info;:}
     | autor dosp NOM:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setAutor(e1); RESULT = info;:}
     | lanzamiento dosp NUMBER:e1 puntocoma {:InfoLenguaje info = new InfoLenguaje(); info.setLanzamiento(Integer.parseInt(e1)); RESULT = info;:}
@@ -126,13 +127,13 @@ TER ::= TER:e1 N:e2 puntocoma {:e1.getNoterminal().addAll(e2); RESULT =e1;:}
 ;
 
 T ::= T:e1 coma IDT:e2 {:e1.add(new Terminal(e2)); RESULT = e1;:}
-    | term TIPO:e2 IDT:e1 {:ListaNodoSintactico<Terminal> n = new ListaNodoSintactico<>(e2); n.add(new Terminal(e1)); RESULT = n;:}
-    | error term TIPO:e2 IDT:e1 {:ListaNodoSintactico<Terminal> n = new ListaNodoSintactico<>(e2); n.add(new Terminal(e1)); RESULT = n;:}
+    | term TIPO:e2 IDT:e1 {:ListaNodoSintactico<Terminal> n = new ListaNodoSintactico<>(e2); n.add(new Terminal(e1), true); RESULT = n;:}
+    | error term TIPO:e2 IDT:e1 {:ListaNodoSintactico<Terminal> n = new ListaNodoSintactico<>(e2); n.add(new Terminal(e1), true); RESULT = n;:}
 ;
 
 N ::= N:e1 coma IDN:e2 {:e1.add(new NoTerminal(e2)); RESULT = e1;:}
-    | no term TIPO:e2 IDN:e1 {:ListaNodoSintactico<NoTerminal> n = new ListaNodoSintactico<>(e2); n.add(new NoTerminal(e1)); RESULT = n;:}
-    | error no term TIPO:e2 IDN:e1 {:ListaNodoSintactico<NoTerminal> n = new ListaNodoSintactico<>(e2); n.add(new NoTerminal(e1)); RESULT = n;:}
+    | no term TIPO:e2 IDN:e1 {:ListaNodoSintactico<NoTerminal> n = new ListaNodoSintactico<>(e2); n.add(new NoTerminal(e1), true); RESULT = n;:}
+    | error no term TIPO:e2 IDN:e1 {:ListaNodoSintactico<NoTerminal> n = new ListaNodoSintactico<>(e2); n.add(new NoTerminal(e1), true); RESULT = n;:}
 ;
 
 PROD ::= PROD:e1 PRODP:e2 {:e1.getProducciones().add(e2); RESULT = e1;:}
@@ -140,7 +141,7 @@ PROD ::= PROD:e1 PRODP:e2 {:e1.getProducciones().add(e2); RESULT = e1;:}
     | error PRODP:e1 {:ArrayList<Produccion> pr = new ArrayList<>(); pr.add(e1); RESULT = new ListaProducciones(e1);:}
 ;
 
-PRODP ::= IDN:e1 dpp PR:e2 SEM {:RESULT = new Produccion(new NoTerminal(e1), e2);:}
+PRODP ::= IDN:e1 dpp PR:e2 SEM:e3 {:RESULT = new Produccion(new NoTerminal(e1), e2, e3);:}
 ;
 
 PR ::= PR:e1 TE:e2 {:e1.add(e2); RESULT = e1;:}
@@ -159,9 +160,11 @@ NO ::= IDN:e1 dosp ID:e2 {:RESULT = new NoTerminal(e1, e2);:}
     | error NO:e1 {:RESULT = e1;:}
 ;
 
-SEM ::= llavea COD:e1 result igual COD:e1 llavecp {:RESULT = "{"+e1+"return = "+ e1 + "}";:}
-        | puntocoma {:RESULT = null;:}
-        | error puntocoma {:RESULT = null;:}
+SEM ::= llavea COD:e1 result igual COD:e2 llavecp {:RESULT = new Semantico(e1+"return "+ e2);:}
+        | llavea result igual COD:e2 llavecp {:RESULT = new Semantico("return "+ e2);:}
+        | llavea llavecp {:RESULT = new Semantico("return null;");:}
+        | puntocoma {:RESULT = new Semantico("return null;");:}
+        | error puntocoma {:RESULT = new Semantico("return null;");:}
 ;
 
 /*RES ::= result igual OP puntocoma
@@ -201,33 +204,34 @@ NOM ::= NOM:e1 ID:e2 {:RESULT = e1 + " " + e2;:}
     | ID:e1 {:RESULT = e1;:}
 ;
 
-COD ::= COD:e1 CODP:e2 {:RESULT = e1 + e2;:}
+COD ::= COD:e1 CODP:e2 {:RESULT = e1 + " " + e2;:}
     | CODP:e1 {:RESULT = e1;:}
 ;
 
 CODP ::= or:e1 {:RESULT = e1;:}| nom:e1 {:RESULT = e1;:}| version:e1 {:RESULT = e1;:}
     | autor:e1 {:RESULT = e1;:}| lanzamiento:e1 {:RESULT = e1;:}| extension:e1 {:RESULT = e1;:}
-    | term:e1 {:RESULT = e1;:}| no:e1 {:RESULT = e1;:}| llavea:e1 {:RESULT = e1;:}
-    | llavec:e1 {:RESULT = e1;:}| y:e1 {:RESULT = e1;:}| coma:e1 {:RESULT = e1;:}
+    | term:e1 {:RESULT = e1;:}| no:e1 {:RESULT = e1;:}| llavea:e1 {:RESULT = e1 + "\n";:}
+    | llavec:e1 {:RESULT = e1 + "\n";:}| y:e1 {:RESULT = e1;:}| coma:e1 {:RESULT = e1;:}
     | igual:e1 {:RESULT = e1;:}| corchetea:e1 {:RESULT = e1;:}| corchetec:e1 {:RESULT = e1;:}
     | parentesisa:e1 {:RESULT = e1;:}| parentesisc:e1 {:RESULT = e1;:}| mas:e1 {:RESULT = e1;:}
     | mult:e1 {:RESULT = e1;:}| menos:e1 {:RESULT = e1;:}| div:e1 {:RESULT = e1;:}| percent:e1 {:RESULT = e1;:}
-    | puntocoma:e1 {:RESULT = e1;:}| dosp:e1 {:RESULT = e1;:}| lin:e1 {:RESULT = e1;:}| tab:e1 {:RESULT = e1;:}
+    | puntocoma:e1 {:RESULT = e1 + "\n";:}| dosp:e1 {:RESULT = e1;:}| lin:e1 {:RESULT = e1;:}| tab:e1 {:RESULT = e1;:}
     | esp:e1 {:RESULT = e1;:}| comilla:e1 {:RESULT = e1;:}| pre:e1 {:RESULT = e1;:}| punto:e1 {:RESULT = e1;:}
     | caracterma:e1 {:RESULT = e1;:} | caracterme:e1 {:RESULT = e1;:} | idt:e1 {:RESULT = e1;:}| idn:e1| number:e1 {:RESULT = e1;:}
-    | codigo:e1 {:RESULT = e1;:}| id:e1 {:RESULT = e1;:}| dpp:e1 {:RESULT = e1;:} | entero:e1 {:RESULT = e1;:} | real:e1 {:RESULT = e1;:} | cadena:e1 {:RESULT = e1;:}
+    | codigo:e1 {:RESULT = e1;:}| id:e1 {:RESULT = e1;:}| dpp:e1 {:RESULT = e1;:} | entero:e1 {:RESULT = e1;:} 
+    | real:e1 {:RESULT = e1;:} | cadena:e1 {:RESULT = e1;:} | e:e1 {:RESULT = e1;:}
 ;
 
 /*NUMBERN ::= NUMBER:e1 {:RESULT = Integer.parseInt(e1);:}
         | menos:e1 NUMBER:e2 {:RESULT = Integer.parseInt(e1+e2);:}
 ;
-
+*/
 NUMBER ::= NUMBER:e1 number:e2 {:RESULT = e1+e2;:}
         | number:e1 {:RESULT = e1;:}
-;*/
+;
 
-TIPO ::= entero:e1 {:RESULT = e1;:}
-        | real:e1 {:RESULT = e1;:}
-        | cadena:e1 {:RESULT = e1;:}
-        | {:RESULT = null;:}
+TIPO ::= entero:e1 {:RESULT = "Integer";:}
+        | real:e1 {:RESULT = "Float";:}
+        | cadena:e1 {:RESULT = "String";:}
+        | {:RESULT = "Object";:}
 ;

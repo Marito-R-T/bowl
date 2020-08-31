@@ -32,7 +32,7 @@ public class Lenguaje implements Serializable {
     }
 
     public void realizarCodigo(String codigo) {
-        this.codigo = new AnalisisCodigoJava(codigo, "hola");
+        this.codigo = new AnalisisCodigoJava(codigo, "CodigoJava");
     }
 
     public InfoLenguaje getInfo() {
@@ -45,6 +45,10 @@ public class Lenguaje implements Serializable {
 
     public ArbolBinario getBinario() {
         return binario;
+    }
+
+    public AnalisisCodigoJava getCodigo() {
+        return codigo;
     }
 
     public void setBinario(Nodo binario) {
@@ -69,6 +73,12 @@ public class Lenguaje implements Serializable {
         this.producciones.realizarLALR(tablaSimbolos);
         this.analisis = new ManejadorAnalisis(binario, tablaSimbolos, this.producciones);
         this.tablaLALR = new TablaLALR(this.producciones.getTablaTransicion(), this.info.getNombre(), tablaSimbolos);
+        for (int i = 1; i < producciones.getProducciones().size(); i++) {
+            producciones.getProducciones().get(i).hacerSemantico(i, tablaSimbolos);
+            System.out.println(producciones.getProducciones().get(i).getSemantico().getTexto());
+        }
+        this.codigo.hacermetodos(this.producciones.getProducciones());
+        analisis.setAnalisis(codigo);
     }
 
     public ManejadorAnalisis getAnalisis() {

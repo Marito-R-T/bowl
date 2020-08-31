@@ -53,6 +53,7 @@ public class SintaxisLenguajesSym {
   public static final int nom = 34;
   public static final int version = 3;
   public static final int div = 23;
+  public static final int e = 49;
   public static final int no = 8;
   public static final int idt = 43;
   public static final int number = 42;
@@ -106,7 +107,8 @@ public class SintaxisLenguajesSym {
   "idn",
   "caracterma",
   "caracterme",
-  "llavecp"
+  "llavecp",
+  "e"
   };
 }
 

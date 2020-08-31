@@ -336,4 +336,13 @@ public class ListaProducciones implements Serializable {
         return tablaTransicion;
     }
 
+    public Produccion encontrar(Produccion pro) {
+        for (Produccion produccione : producciones) {
+            if(produccione.esSim(pro)){
+                return produccione;
+            }
+        }
+        return null;
+    }
+    
 }

@@ -9,10 +9,11 @@ import com.mycompany.bowl.AperturaArchivos.AperturaTexto;
 import com.mycompany.bowl.AperturaArchivos.GuardadoTexto;
 import com.mycompany.bowl.analizadores.LexicoLenguaje;
 import com.mycompany.bowl.analizadores.SintaxisLenguajes;
+import com.mycompany.bowl.analizadores.guardado.GuardarLenguaje;
 import com.mycompany.bowl.backend.lenguaje.Lenguaje;
-import java.awt.Color;
 import java.io.File;
 import java.io.StringReader;
+import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
@@ -30,6 +31,7 @@ public class BowlGUI extends javax.swing.JFrame {
     private ItemLenguaje seleccionado;
     private final TablaHTML tablahtml;
     private final PilaFrame pila;
+    private final GuardarLenguaje guardarLenguaje;
 
     /**
      * Creates new form BowlGUI
@@ -43,6 +45,8 @@ public class BowlGUI extends javax.swing.JFrame {
         pila.setVisible(false);
         initComponents();
         this.setLocationRelativeTo(null);
+        guardarLenguaje = new GuardarLenguaje();
+        this.agregarItems(guardarLenguaje.leerLenguaje());
     }
 
     /**
@@ -76,6 +80,11 @@ public class BowlGUI extends javax.swing.JFrame {
         itemPila = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         pnlPrincipal.setBackground(new java.awt.Color(89, 89, 89));
 
@@ -222,6 +231,16 @@ public class BowlGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void agregarItems(List<Lenguaje> len) {
+        len.forEach((lenguaje) -> {
+            ItemLenguaje item = new ItemLenguaje(lenguaje, this), item2 = new ItemLenguaje(lenguaje, this, true);
+            item.setHermano(item2);
+            item2.setHermano(item);
+            menuLenguajes.add(item);
+            menuBorrar.add(item2);
+        });
+    }
+
     private void itemAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemAbrirActionPerformed
         // TODO add your handling code here:
         File file = apertura.abrirTexto(this);
@@ -254,6 +273,8 @@ public class BowlGUI extends javax.swing.JFrame {
                         break;
                     }
                 }
+                System.out.println(len.getInfo().getAutor());
+                guardarLenguaje.guardarLenguaje(len, len.getInfo().getNombre());
                 if (!encontrado) {
                     ItemLenguaje item = new ItemLenguaje(len, this), item2 = new ItemLenguaje(len, this, true);
                     item.setHermano(item2);
@@ -384,11 +405,20 @@ public class BowlGUI extends javax.swing.JFrame {
 
     private void itemPilaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemPilaActionPerformed
         // TODO add your handling code here:
-        if (this.seleccionado != null && this.seleccionado.getLenguaje().getAnalisis().getPila()!= null) {
+        if (this.seleccionado != null && this.seleccionado.getLenguaje().getAnalisis().getPila() != null) {
             this.pila.setVisible(true);
             this.pila.iniciarPanel();
         }
     }//GEN-LAST:event_itemPilaActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        for (int i = 0; i < menuLenguajes.getItemCount(); i++) {
+            ItemLenguaje l = (ItemLenguaje) menuLenguajes.getItem(i);
+            l.getLenguaje().getCodigo().setCl(null);
+            guardarLenguaje.guardarLenguaje(l.getLenguaje(), l.getLenguaje().getInfo().getNombre());
+        }
+    }//GEN-LAST:event_formWindowClosing
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

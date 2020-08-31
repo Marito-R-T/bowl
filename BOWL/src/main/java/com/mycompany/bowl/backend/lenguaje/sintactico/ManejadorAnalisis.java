@@ -7,6 +7,7 @@ package com.mycompany.bowl.backend.lenguaje.sintactico;
 
 import com.mycompany.bowl.backend.lenguaje.lexico.ArbolBinario;
 import com.mycompany.bowl.backend.lenguaje.lexico.Token;
+import com.mycompany.bowl.backend.lenguaje.semantico.AnalisisCodigoJava;
 import com.mycompany.bowl.backend.lenguaje.sintactico.lalr.Aceptar;
 import com.mycompany.bowl.backend.lenguaje.sintactico.lalr.GoTo;
 import com.mycompany.bowl.backend.lenguaje.sintactico.lalr.OperacionSintactica;
@@ -26,9 +27,10 @@ public class ManejadorAnalisis implements Serializable {
     private ArbolBinario binario;
     private TablaDeSimbolos tablaSimbolos;
     private ListaProducciones producciones;
+    private AnalisisCodigoJava analisis;
     private int line, column, tam;
     private Pila pila;
-    
+
     public ManejadorAnalisis(ArbolBinario binario, TablaDeSimbolos tablaSimbolos, ListaProducciones producciones) {
         this.binario = binario;
         this.tablaSimbolos = tablaSimbolos;
@@ -42,9 +44,13 @@ public class ManejadorAnalisis implements Serializable {
         return pila;
     }
 
+    public void setAnalisis(AnalisisCodigoJava analisis) {
+        this.analisis = analisis;
+    }
+
     public Token analizarTexto(String s) {
         if (s.length() > tam) {
-            Token token = binario.conseguirToken(s.substring(tam), column, line);
+            Token token = binario.conseguirToken(s.substring(tam), column, line, tablaSimbolos);
             if (token != null) {
                 line += token.getLines();
                 column = token.getColumnf();
@@ -59,15 +65,15 @@ public class ManejadorAnalisis implements Serializable {
                 return null;
             }
         } else {
-            return new Token(line, column, 0, 0, column, true, null, null);
+            return new Token(line, column, 0, 0, column, true, null, null, null);
         }
     }
-    
+
     private void reiniciarAnalisis() {
         this.line = 0;
         this.column = 0;
         this.tam = 0;
-        this.pila = new Pila();
+        this.pila = new Pila(analisis);
     }
 
     public Object analizarSintactico(String s) {
@@ -91,11 +97,11 @@ public class ManejadorAnalisis implements Serializable {
                     }
                     if (op instanceof Shift) {
                         System.out.println("shift");
-                        pila.shift(new NodoPila(((Shift) op).getNodo()), ((Shift) op).getIra().getDestino().getId());
+                        pila.shift(new NodoPila(((Shift) op).getNodo()), ((Shift) op).getIra().getDestino().getId(), tok.getObject());
                         op = null;
                     } else if (op instanceof Remove) {
                         System.out.println("remove");
-                        NodoPila p = pila.remove(((Remove) op).getPr(), (((Remove)op).getPro()+1));
+                        NodoPila p = pila.remove(((Remove) op).getPr(), (((Remove) op).getPro() + 1), producciones);
                         op = producciones.getTablaTransicion()[pila.getPila().getNumero() - 1][tablaSimbolos.posNoTerminal(p.getNombre())];
                     } else if (op instanceof GoTo) {
                         System.out.println("goto");

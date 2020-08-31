@@ -5,11 +5,13 @@
  */
 package com.mycompany.bowl.backend.lenguaje.semantico;
 
+import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.Produccion;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.commons.compiler.CompileException;
@@ -21,32 +23,82 @@ import org.codehaus.janino.SimpleCompiler;
  */
 public class AnalisisCodigoJava implements Serializable {
 
-    private String codigo, nombre;
+    private final String nombre;
+    private String codigo;
+    private Class cl;
 
     public AnalisisCodigoJava(String codigo, String nombre) {
-        this.codigo = "class " + nombre + "{\n"
-                + codigo + "}\n";
         this.codigo = codigo;
         this.nombre = nombre;
     }
 
     public void ingresarClase() {
-        try {
-            SimpleCompiler compiler;
-            compiler = new SimpleCompiler();
-            compiler.cook(new StringReader(codigo));
-            Class cl = compiler.getClassLoader().loadClass(nombre);
+        /*try {
             Object arne = cl.newInstance();
             Method doWork = cl.getDeclaredMethod("mains");
             Object resultado = doWork.invoke(arne, new Object[0]);
             System.out.println(resultado);
-        } catch (CompileException | IOException
+        } catch (/*CompileException | IOException
                 | ClassNotFoundException | InstantiationException
                 | IllegalAccessException | NoSuchMethodException
                 | SecurityException | IllegalArgumentException
                 | InvocationTargetException ex) {
             Logger.getLogger(AnalisisCodigoJava.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+    }
+
+    public void inizializar() {
+        try {
+            SimpleCompiler compiler;
+            compiler = new SimpleCompiler();
+            compiler.cook(new StringReader(codigo));
+            cl = compiler.getClassLoader().loadClass(nombre);
+        } catch (CompileException | IOException
+                /*| ClassNotFoundException | InstantiationException
+                | IllegalAccessException | NoSuchMethodException*/
+                | SecurityException | IllegalArgumentException | ClassNotFoundException ex
+                /*| InvocationTargetException ex*/) {
+            Logger.getLogger(AnalisisCodigoJava.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void hacermetodos(List<Produccion> pro) {
+        try {
+            String s = "\n";
+            for (Produccion produccion : pro) {
+                if (produccion.getSemantico() != null) {
+                    s += produccion.getSemantico().getTexto() + "\n";
+                }
+            }
+            codigo = "public class " + nombre + "{\n" + codigo + s + "\n}\n";
+            System.out.println(codigo);
+            SimpleCompiler compiler;
+            compiler = new SimpleCompiler();
+            compiler.cook(new StringReader(codigo));
+            cl = compiler.getClassLoader().loadClass(nombre);
+        } catch (CompileException | IOException
+                /*| ClassNotFoundException | InstantiationException
+                | IllegalAccessException | NoSuchMethodException*/
+                | SecurityException | IllegalArgumentException | ClassNotFoundException ex
+                /*| InvocationTargetException ex*/) {
+            Logger.getLogger(AnalisisCodigoJava.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public Object hacerMetodo(String metodo, Object[] identidades, Class[] clas) {
+        try {
+            Object arne = cl.newInstance();
+            Method doWork = cl.getDeclaredMethod(metodo, clas);
+            Object resultado = doWork.invoke(arne, identidades);
+            return resultado;
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
+            Logger.getLogger(AnalisisCodigoJava.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public void setCl(Class cl) {
+        this.cl = cl;
     }
 
 }

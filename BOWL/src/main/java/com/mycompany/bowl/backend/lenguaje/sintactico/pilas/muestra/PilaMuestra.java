@@ -27,7 +27,7 @@ public class PilaMuestra implements Serializable {
         Muestra ms = new Muestra(accion);
         NodoPila n = nodo;
         while(n!=null) {
-            ms.getString().add(0, n.getNombre());
+            ms.getString().add(0, n.getNombre()+"<>"+n.getValor());
             n = n.getAnterior();
         }
         EstadoPila e = estado;

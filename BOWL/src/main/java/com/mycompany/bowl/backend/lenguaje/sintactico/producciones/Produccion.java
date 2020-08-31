@@ -5,9 +5,11 @@
  */
 package com.mycompany.bowl.backend.lenguaje.sintactico.producciones;
 
+import com.mycompany.bowl.backend.lenguaje.semantico.Semantico;
 import com.mycompany.bowl.backend.lenguaje.sintactico.Aceptacion;
 import com.mycompany.bowl.backend.lenguaje.sintactico.NoTerminal;
 import com.mycompany.bowl.backend.lenguaje.sintactico.NodoSintactico;
+import com.mycompany.bowl.backend.lenguaje.sintactico.TablaDeSimbolos;
 import com.mycompany.bowl.backend.lenguaje.sintactico.Terminal;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,14 +24,27 @@ public class Produccion implements Serializable {
     private final NoTerminal productora;
     private final List<NodoSintactico> producidos;
     private final List<Terminal> siguientes;
+    private Semantico semantico;
     public int pospunto;
     public boolean enproceso = false;
+
+    public Produccion(NoTerminal productora, ArrayList<NodoSintactico> producidos, Semantico semantico) {
+        this.productora = productora;
+        this.producidos = producidos;
+        this.semantico = semantico;
+        this.siguientes = new ArrayList<>();
+        this.pospunto = 0;
+    }
 
     public Produccion(NoTerminal productora, ArrayList<NodoSintactico> producidos) {
         this.productora = productora;
         this.producidos = producidos;
         this.siguientes = new ArrayList<>();
         this.pospunto = 0;
+    }
+
+    public Semantico getSemantico() {
+        return semantico;
     }
 
     public Produccion(Produccion produccion) {
@@ -127,7 +142,7 @@ public class Produccion implements Serializable {
         for (Terminal terminal : t) {
             if (prod instanceof Aceptacion && terminal instanceof Aceptacion) {
                 return true;
-            }  else if (!(prod instanceof Aceptacion) && !(terminal instanceof Aceptacion)) {
+            } else if (!(prod instanceof Aceptacion) && !(terminal instanceof Aceptacion)) {
                 if (terminal.getNombre().equals(prod.getNombre())) {
                     return true;
                 }
@@ -184,4 +199,22 @@ public class Produccion implements Serializable {
         }
     }
 
+    public void hacerSemantico(int i, TablaDeSimbolos tabla) {
+        List<String> ids = new ArrayList<>(), nombre = new ArrayList<>();
+        for (NodoSintactico producido : producidos) {
+            if (producido.getId() != null) {
+                ids.add(producido.getId());
+                nombre.add(producido.getNombre());
+            }
+        }
+        String[][] id = new String[ids.size()][2];
+        for (int j = 0; j < id.length; j++) {
+            id[j][0] = ids.get(j);
+            id[j][1] = tabla.getTipo(nombre.get(j));
+        }
+        System.out.println(this.getPrimerNodo().getNombre());
+        String tipo = tabla.getTipo(this.getPrimerNodo().getNombre());
+        this.semantico.agregarTexto("azbyñkolewncvpasd"+i, id, tipo);
+    }
+    
 }

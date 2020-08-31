@@ -11,6 +11,7 @@ import com.mycompany.bowl.backend.lenguaje.lexico.dfa.Transicion;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.Nodo;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoAceptacion;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.NodoConcat;
+import com.mycompany.bowl.backend.lenguaje.sintactico.TablaDeSimbolos;
 import java.io.Serializable;
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class ArbolBinario implements Serializable {
         return raiz;
     }
 
-    public Token conseguirToken(String s, int column, int line) {
+    public Token conseguirToken(String s, int column, int line, TablaDeSimbolos tab) {
         int i = 0, lines = 0, col = 0, colf = 0, lineafin = 0, tam = 0;
         String cadenai = "", cadenaf = null, nombre = null;
         int e = 0;
@@ -99,7 +100,7 @@ public class ArbolBinario implements Serializable {
             }
         }
         if (cadenaf != null) {
-            return new Token(line, column, tam, lineafin, colf, false, cadenaf, nombre);
+            return new Token(line, column, tam, lineafin, colf, false, cadenaf, nombre, tab.pasarObjeto(nombre, cadenaf));
         } else {
             return null;
         }

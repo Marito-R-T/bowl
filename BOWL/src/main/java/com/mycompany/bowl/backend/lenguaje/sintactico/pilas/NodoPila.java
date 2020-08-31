@@ -15,9 +15,18 @@ import java.io.Serializable;
 public class NodoPila extends NodoSintactico implements Serializable {
     
     private NodoPila anterior;
+    private Object valor;
     
     public NodoPila(NodoSintactico n) {
         super(n.getNombre(), n.getId());
+    }
+
+    public Object getValor() {
+        return valor;
+    }
+
+    public void setValor(Object valor) {
+        this.valor = valor;
     }
     
     public void setAnterior(NodoPila anterior) {

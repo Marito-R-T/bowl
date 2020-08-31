@@ -6,9 +6,8 @@
 package com.mycompany.bowl.backend.lenguaje.codigojava;
 
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
-import org.codehaus.commons.compiler.jdk.SimpleCompiler;
+import java.lang.reflect.Method;
+import org.codehaus.janino.SimpleCompiler;
 
 /**
  *
@@ -21,10 +20,11 @@ public class prueba {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        /*try {
+        System.out.println("resultado : " + (1 + 6 + 4 * 9 / 8 + 6 - 6));
+        try {
             String javaSource = "public class prueba {\n"
                     + "\n"
-                    + "    public String gg(int i) {\n"
+                    + "    public String gg(Integer i) {\n"
                     + "        // TODO code application logic here\n"
                     + "        System.out.println(i);\n"
                     + "        return \"hola: \"+i;"
@@ -37,14 +37,24 @@ public class prueba {
             SimpleCompiler compiler = new SimpleCompiler();
             compiler.cook(new StringReader(javaSource));
             Class cl = compiler.getClassLoader().loadClass("prueba");
-            Object objeto = cl.newInstance();
-            System.out.println(objeto.toString());
+            Object arne = cl.newInstance();
+            //Method doWork = cl.getDeclaredMethod("gg");
+            Method[] dw = cl.getDeclaredMethods();
+            for (Method method : dw) {
+                if (method.getName().equals("gg")) {
+                    Class[] m = method.getParameterTypes();
+                    Method doMethod = cl.getDeclaredMethod("gg", m);
+                    System.out.println(doMethod);
+                    Object resultado = doMethod.invoke(arne, new Object[]{14});
+                    System.out.println(resultado);
+                    break;
+                }
+            }
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            e.printStackTrace();
-        }*/
-        
-        List<String> s = new ArrayList<>();
+        }
+
+        /*List<String> s = new ArrayList<>();
         s.add("a");
         s.add("b");
         for (String string : s) {
@@ -52,7 +62,20 @@ public class prueba {
             if(s.size()<10){
                 s.add(string+s.size());
             }
-        }
+        }*/
+ /*Texto txt = new Texto();
+        txt.escribirPath();*/
     }
 
+    /*public static class Texto {
+
+        public void escribirPath() {
+            try {
+                System.out.println(this.getClass().getResource("/").toURI().getPath());
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(prueba.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+*
+    }*/
 }

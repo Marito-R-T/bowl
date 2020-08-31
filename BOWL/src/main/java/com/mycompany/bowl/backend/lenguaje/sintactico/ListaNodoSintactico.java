@@ -21,8 +21,9 @@ public class ListaNodoSintactico<T> extends ArrayList<T> implements Serializable
         this.tipo = tipo;
     }
     
-    public boolean add(NodoSintactico e) {
+    public boolean add(NodoSintactico e, boolean a) {
         e.setTipo(tipo);
+        System.out.println(tipo);
         return super.add((T) e); //To change body of generated methods, choose Tools | Templates.
     }
 

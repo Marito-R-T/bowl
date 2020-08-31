@@ -72,22 +72,19 @@ public class TablaHTML extends javax.swing.JFrame {
     public void agregarTabla(Lenguaje lenguaje) {
         this.setLocationRelativeTo(bowl);
         try {
-            ClassLoader classLoader = getClass().getClassLoader();
-            File file = new File(classLoader.getResource("tabla/").getFile()), file2;
+            File file = new File(getClass().getResource("/").getFile() + "tabla.html");
             System.out.println(file.getPath());
-            file2 = new File(file.getPath()+"/tabla.html");
-            System.out.println(file2.getPath());
-            if (!file2.exists()) {
-                file2.createNewFile();
+            if (!file.exists()) {
+                file.createNewFile();
             }
             FileWriter fichero = null;
             PrintWriter pw = null;
-            fichero = new FileWriter(file2);
+            fichero = new FileWriter(file);
             pw = new PrintWriter(fichero);
             pw.println(lenguaje.getTablaLALR().getTabla());
             pw.close();
-            editorHTML.setPage(file2.toURI().toURL());
-            Desktop.getDesktop().open(file2);
+            editorHTML.setPage(file.toURI().toURL());
+            Desktop.getDesktop().open(file);
         } catch (IOException ex) {
             Logger.getLogger(TablaHTML.class.getName()).log(Level.SEVERE, null, ex);
         }

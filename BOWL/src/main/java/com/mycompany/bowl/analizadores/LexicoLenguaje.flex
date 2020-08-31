@@ -9,7 +9,7 @@ import java_cup.runtime.*;
 %full
 %line
 %column
-espacio=[\t|\r|\n|\f|\v|" "| ]+
+espacio=[\t|\r|\n|\f|" "|""]+
 letrasmi=[a-z]
 letrasma=[A-Z]
 cero=[0]
@@ -37,7 +37,7 @@ Number = ({OneNine}|{cero})
 <YYINITIAL> ("//")(.)*("\n") {/*NO PRESTAR ATENCION*/}
 /* Palabras Reservadas */
 
-<YYINITIAL> ("ersion") {return new Symbol(SintaxisLenguajesSym.version, yycolumn, yyline, yytext());}
+<YYINITIAL> ("version") {return new Symbol(SintaxisLenguajesSym.version, yycolumn, yyline, yytext());}
 <YYINITIAL> ("terminal") {return new Symbol(SintaxisLenguajesSym.term, yycolumn, yyline, yytext());}
 <YYINITIAL> ("nombre") {return new Symbol(SintaxisLenguajesSym.nom, yycolumn, yyline, yytext());}
 <YYINITIAL> ("autor") {return new Symbol(SintaxisLenguajesSym.autor, yycolumn, yyline, yytext());}

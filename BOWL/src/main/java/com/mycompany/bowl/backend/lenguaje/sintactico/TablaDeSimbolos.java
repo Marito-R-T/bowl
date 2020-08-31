@@ -61,4 +61,50 @@ public class TablaDeSimbolos implements Serializable {
         }
     }
 
+    public String getTipo(String nombre) {
+        for (Terminal term : terminal) {
+            if (term.getNombre().equals(nombre)) {
+                if (term.getTipo() != null) {
+                    return term.getTipo();
+                } else {
+                    return "Object";
+                }
+
+            }
+        }
+        for (NoTerminal term : noterminal) {
+            System.out.println(term.getTipo());
+            if (term.getNombre().equals(nombre)) {
+                if (term.getTipo() != null) {
+                    return term.getTipo();
+                } else {
+                    return "Object";
+                }
+            }
+        }
+        return null;
+    }
+
+    public Object pasarObjeto(String nombre, String token) {
+        for (Terminal term : terminal) {
+            if (term.getNombre().equals(nombre)) {
+                if (term.getTipo() != null) {
+                    if (term.getTipo().equals("Integer")) {
+                        return Integer.parseInt(token);
+                    } else if (term.getTipo().equals("Float")) {
+                        return Float.parseFloat(token);
+                    } else if (term.getTipo().equals("String")) {
+                        return token;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+
+            }
+        }
+        return null;
+    }
+
 }

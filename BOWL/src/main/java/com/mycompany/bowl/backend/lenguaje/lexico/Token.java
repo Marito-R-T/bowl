@@ -22,8 +22,9 @@ public class Token implements Serializable {
     private int nivel;
     private final String token;
     private final String nombre;
+    private final Object object;
     
-    public Token(int line, int column, int tamano, int lines, int columnf, boolean ultimo, String token, String nombre){
+    public Token(int line, int column, int tamano, int lines, int columnf, boolean ultimo, String token, String nombre, Object ob){
         this.line = line;
         this.lines = lines;
         this.column = column;
@@ -32,6 +33,11 @@ public class Token implements Serializable {
         this.token = token;
         this.nombre = nombre;
         this.ultimo = ultimo;
+        this.object = ob;
+    }
+
+    public Object getObject() {
+        return object;
     }
 
     public int getNivel() {
