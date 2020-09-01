@@ -31,8 +31,8 @@ public class GoTo extends OperacionSintactica implements Serializable {
 
     @Override
     public boolean parecido(OperacionSintactica op) {
-        return this.ira.getDestino().equals(((GoTo)op).getIra().getDestino())
-                && this.ira.getInicial().equals(((GoTo)op).getIra().getInicial())
+        return this.ira.getDestino().parecido(((GoTo)op).getIra().getDestino())
+                && this.ira.getInicial().parecido(((GoTo)op).getIra().getInicial())
                 && this.nodo.equals(((GoTo) op).getNodo())
                 && this.ira.getNodo().equals(((GoTo)op).getIra().getNodo());
     }

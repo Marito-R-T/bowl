@@ -16,8 +16,10 @@ import java.util.ArrayList;
  */
 public class ProduccionInicial extends Produccion implements Serializable {
     
+    public static String nombre = "89ads452Pasñ78klwD/&%H1Ger$!p?J¡Dnm#x4FAaS*+AewrjORv";
+    
     public ProduccionInicial(ArrayList<NodoSintactico> sintactico) {
-        super(new NoTerminal("SP"), sintactico);
+        super(new NoTerminal(ProduccionInicial.nombre), sintactico);
     }
     
     public ProduccionInicial(Produccion produccion) {

@@ -6,6 +6,7 @@
 package com.mycompany.bowl.backend.lenguaje.sintactico;
 
 import com.mycompany.bowl.backend.lenguaje.sintactico.lalr.OperacionSintactica;
+import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.ProduccionInicial;
 import java.io.Serializable;
 
 /**
@@ -16,6 +17,7 @@ public class TablaLALR implements Serializable {
 
     private String tabla;
 //
+
     public TablaLALR(OperacionSintactica[][] op, String nombre, TablaDeSimbolos tabla) {
         this.tabla = "<!doctype html>\n"
                 + "<html lang=\"en\">\n"
@@ -37,7 +39,7 @@ public class TablaLALR implements Serializable {
                 + "             </tr>\n"
                 + "         </thead>\n"
                 + "         <tbody>\n"
-                + this.realizarTabla(op)
+                + this.realizarTabla(op, tabla)
                 + "         </tbody>\n"
                 + "     </table>\n"
                 + "    <!-- Optional JavaScript -->\n"
@@ -56,21 +58,25 @@ public class TablaLALR implements Serializable {
         }
         s += "                 <th scope=\"col\">$$$</th>\n";
         for (NoTerminal terminal : tabla.getNoterminal()) {
-            s += "                 <th scope=\"col\">" + terminal.getNombre() + "</th>\n";
+            if (!terminal.getNombre().equals(ProduccionInicial.nombre)) {
+                s += "                 <th scope=\"col\">" + terminal.getNombre() + "</th>\n";
+            }
         }
         return s;
     }
 
-    public final String realizarTabla(OperacionSintactica[][] op) {
+    public final String realizarTabla(OperacionSintactica[][] op, TablaDeSimbolos tab) {
         String s = "";
         for (int i = 0; i < op.length; i++) {
             s += "             <tr>\n"
-                    + "                 <th class=\"table-dark\" scope=\"row\">" + (i+1) + "</th>\n";
+                    + "                 <th class=\"table-dark\" scope=\"row\">" + (i + 1) + "</th>\n";
             for (int j = 0; j < op[i].length; j++) {
-                if (op[i][j] != null) {
-                    s += "                 <th>" + op[i][j] + "</th>\n";
-                } else {
-                    s += "                 <th>---</th>\n";
+                if (j != tab.getTerminal().size() + 1) {
+                    if (op[i][j] != null) {
+                        s += "                 <th>" + op[i][j] + "</th>\n";
+                    } else {
+                        s += "                 <th>---</th>\n";
+                    }
                 }
             }
             s += "             </tr>\n";

@@ -58,32 +58,11 @@ public class LALR implements Serializable {
     public void analizarLALR() {
         this.realizarirA2();
         int i = 0;
-        while (i < herradura.size()) {
-            int j = i + 1;
-            while (j < herradura.size()) {
-                if (herradura.get(i).esSimilar(herradura.get(j))) {
-                    I n = eliminados.remove(j);
-                    this.remplazarDestinos(n, eliminados.get(i));
-                    this.remplazarPrimeros(n, eliminados.get(i));
-                    if (realizarTabla()) {
-                        herradura.get(i).agregarSiguientes(n.getProducciones());
-                        herradura.remove(n);
-                        this.realizarirA();
-                        i = 0;
-                        j = 0;
-                    } else {
-                        eliminados = new ArrayList<>(herradura);
-                        for (int d = 0; d < eliminados.size(); d++) {
-                            eliminados.get(d).setId2(d + 1);
-                        }
-                        this.realizarirA2();
-                    }
-                }
-                j++;
-            }
-            i++;
-        }
+        this.realizarWhile(i);
         if (this.realizarTabla()) {
+            for (I eliminado : herradura) {
+                eliminado.setId(eliminado.getId2());
+            }
             for (Terminal terminale : prod.getTerminales()) {
                 System.out.print("|" + terminale + "|");
             }
@@ -99,6 +78,81 @@ public class LALR implements Serializable {
                 System.out.println("");
             }
         }
+    }
+
+    public void realizarWhile(int f) {
+        try {
+            int i = f;
+            while (i < herradura.size()) {
+                int j = i + 1;
+                while (j < herradura.size()) {
+                    if (herradura.get(i).esSimilar(herradura.get(j))) {
+                        I a = eliminados.get(i);
+                        I n = eliminados.remove(j);
+                        this.remplazarDestinos(n, eliminados.get(i));
+                        this.remplazarPrimeros(n, eliminados.get(i));
+                        if (realizarTabla()) {
+                            herradura.get(herradura.indexOf(a)).agregarSiguientes(n.getProducciones());
+                            herradura.remove(n);
+                            this.realizarirA();
+                            i = 0;
+                            j = 0;
+                        } else {
+                            if (!realizarWhilep(i + 1)) {
+                                eliminados = new ArrayList<>(herradura);
+                                for (int d = 0; d < eliminados.size(); d++) {
+                                    eliminados.get(d).setId2(d + 1);
+                                }
+                                this.realizarirA2();
+                            } else {
+                                herradura.get(herradura.indexOf(a)).agregarSiguientes(n.getProducciones());
+                                herradura.remove(n);
+                                this.realizarirA();
+                                i = 0;
+                                j = 0;
+                            }
+                        }
+                    }
+                    j++;
+                }
+                i++;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public boolean realizarWhilep(int f) {
+        int i = f;
+        while (i < eliminados.size()) {
+            int j = i + 1;
+            while (j < eliminados.size()) {
+                if (eliminados.get(i).esSimilar(eliminados.get(j))) {
+                    I a = eliminados.get(i);
+                    I n = eliminados.remove(j);
+                    this.remplazarDestinos(n, eliminados.get(i));
+                    this.remplazarPrimeros(n, eliminados.get(i));
+                    if (realizarTabla()) {
+                        herradura.get(herradura.indexOf(a)).agregarSiguientes(n.getProducciones());
+                        herradura.remove(n);
+                        this.realizarirA();
+                        return true;
+                    } else {
+                        if (!realizarWhilep(i + 1)) {
+                            return false;
+                        } else {
+                            herradura.get(herradura.indexOf(a)).agregarSiguientes(n.getProducciones());
+                            herradura.remove(n);
+                            this.realizarirA();
+                            return true;
+                        }
+                    }
+                }
+                j++;
+            }
+            i++;
+        }
+        return false;
     }
 
     public boolean realizarTabla() {
@@ -192,7 +246,7 @@ public class LALR implements Serializable {
                 OperacionSintactica op = this.tablaTransicion[i.getId2() - 1][f[0]];
                 if (op == null || (op instanceof Remove && ((Remove) op).isIgual(remove))) {
                     this.tablaTransicion[i.getId2() - 1][f[0]] = remove;
-                } else if (op instanceof Shift && i.getNivel()<=f[1]) {
+                } else if (op instanceof Shift && i.getNivel() <= f[1]) {
                     this.tablaTransicion[i.getId() - 1][f[0]] = remove;
                 }/* else {
                     System.out.println(remove);

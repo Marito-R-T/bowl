@@ -30,8 +30,8 @@ public class Shift extends OperacionSintactica implements Serializable {
 
     @Override
     public boolean parecido(OperacionSintactica op) {
-        return this.ira.getDestino().equals(((Shift)op).getIra().getDestino())
-                && this.ira.getInicial().equals(((Shift)op).getIra().getInicial())
+        return this.ira.getDestino().parecido(((Shift)op).getIra().getDestino())
+                && this.ira.getInicial().parecido(((Shift)op).getIra().getInicial())
                 && this.nodo.equals(((Shift) op).getNodo())
                 && this.ira.getNodo().equals(((Shift)op).getIra().getNodo());
     }

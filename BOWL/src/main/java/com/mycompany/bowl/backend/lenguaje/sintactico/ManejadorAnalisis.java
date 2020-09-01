@@ -97,7 +97,8 @@ public class ManejadorAnalisis implements Serializable {
                     }
                     if (op instanceof Shift) {
                         System.out.println("shift");
-                        pila.shift(new NodoPila(((Shift) op).getNodo()), ((Shift) op).getIra().getDestino().getId(), tok.getObject());
+                        System.out.println(((Shift)op).getIra().getDestino().getId());
+                        pila.shift(new NodoPila(((Shift) op).getNodo()), ((Shift) op).getIra().getDestino().getId2(), tok.getObject());
                         op = null;
                     } else if (op instanceof Remove) {
                         System.out.println("remove");
@@ -105,7 +106,7 @@ public class ManejadorAnalisis implements Serializable {
                         op = producciones.getTablaTransicion()[pila.getPila().getNumero() - 1][tablaSimbolos.posNoTerminal(p.getNombre())];
                     } else if (op instanceof GoTo) {
                         System.out.println("goto");
-                        pila.goTo(((GoTo) op).getIra().getDestino().getId());
+                        pila.goTo(((GoTo) op).getIra().getDestino().getId2());
                         op = producciones.getTablaTransicion()[pila.getPila().getNumero() - 1][tablaSimbolos.posTerminal(tok)];
                     } else {
                         System.out.println(" hahahaha");

@@ -26,12 +26,12 @@ public class GuardarLenguaje {
     public void guardarLenguaje(Lenguaje lenguaje, String nombre) {
         ObjectOutputStream ob = null;
         try {
-            File carpeta = new File(this.getClass().getResource("/").getPath()+"lenguajes/");
-            if(!carpeta.exists()) {
+            File carpeta = new File(this.getClass().getResource("/").getPath() + "lenguajes/");
+            if (!carpeta.exists()) {
                 carpeta.mkdir();
             }
             File file = new File(this.getClass().getResource("/").getPath() + "lenguajes/" + nombre + ".len");
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
             ob = new ObjectOutputStream(new FileOutputStream(file));
@@ -53,27 +53,39 @@ public class GuardarLenguaje {
 
     public List<Lenguaje> leerLenguaje() {
         File file = new File(this.getClass().getResource("/").getPath() + "lenguajes/");
-        List<Lenguaje> lenguajes = new ArrayList<>(); 
-        ObjectInputStream ob = null;
-        for (File f : file.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File directory, String fileName) {
-                return fileName.endsWith(".len");
-            }
-            
-        })) {
-            try {
-                ob = new ObjectInputStream(new FileInputStream(f));
-                Lenguaje leng = (Lenguaje) ob.readObject();
-                leng.getCodigo().inizializar();
-                lenguajes.add(leng);
-            } catch (FileNotFoundException ex) {
-                System.out.println(ex);
-            } catch (IOException | ClassNotFoundException ex) {
-                System.out.println(ex);
+        List<Lenguaje> lenguajes = new ArrayList<>();
+        if (file.exists()) {
+            ObjectInputStream ob = null;
+            for (File f : file.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File directory, String fileName) {
+                    return fileName.endsWith(".len");
+                }
+
+            })) {
+                try {
+                    ob = new ObjectInputStream(new FileInputStream(f));
+                    Lenguaje leng = (Lenguaje) ob.readObject();
+                    leng.getCodigo().inizializar();
+                    lenguajes.add(leng);
+                } catch (FileNotFoundException ex) {
+                    System.out.println(ex);
+                } catch (IOException | ClassNotFoundException ex) {
+                    System.out.println(ex);
+                }
             }
         }
         return lenguajes;
+
+    }
+
+    public static void eliminar(File carpeta, File archivo) {
+        ObjectOutputStream ob = null;
+        if (carpeta.exists()) {
+            if (archivo.exists()) {
+                archivo.delete();
+            }
+        }
     }
 
 }

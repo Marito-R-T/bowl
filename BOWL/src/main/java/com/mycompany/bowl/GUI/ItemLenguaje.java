@@ -5,8 +5,10 @@
  */
 package com.mycompany.bowl.GUI;
 
+import com.mycompany.bowl.analizadores.guardado.GuardarLenguaje;
 import com.mycompany.bowl.backend.lenguaje.Lenguaje;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
@@ -67,6 +69,8 @@ public class ItemLenguaje extends JMenuItem {
                     == JOptionPane.OK_OPTION) {
                 bowl.getMenuLenguajes().remove(this.hermano);
                 bowl.getMenuBorrar().remove(this);
+                File file = new File(this.getClass().getResource("/").getPath() + "lenguajes/" + lenguaje.getInfo().getNombre() + ".len");
+                GuardarLenguaje.eliminar(new File(this.getClass().getResource("/").getPath() + "lenguajes/"), file);
             }
         }
     }

@@ -163,4 +163,8 @@ public class I implements Serializable {
         }
     }
 
+    public boolean parecido(I inicial) {
+        return this.esSimilar(inicial) && this.getId2() == inicial.getId2();
+    }
+
 }
