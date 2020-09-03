@@ -5,6 +5,7 @@
  */
 package com.mycompany.bowl.backend.lenguaje.sintactico.producciones;
 
+import com.mycompany.bowl.backend.errores.ErrorSintactico;
 import com.mycompany.bowl.backend.lenguaje.sintactico.Aceptacion;
 import com.mycompany.bowl.backend.lenguaje.sintactico.LALR;
 import com.mycompany.bowl.backend.lenguaje.sintactico.NoTerminal;
@@ -24,7 +25,7 @@ import java.util.List;
  * @author mari2bar
  */
 public class ListaProducciones implements Serializable {
-
+    
     private final List<Produccion> producciones;
     private List<NoTerminal> noterminales;
     private List<Terminal> terminales;
@@ -32,7 +33,7 @@ public class ListaProducciones implements Serializable {
     private final List<IrA> tabla;
     private OperacionSintactica[][] tablaTransicion;
     private LALR lalr;
-
+    
     public ListaProducciones(Produccion produccion) {
         ArrayList<Produccion> prod = new ArrayList<>();
         prod.add(produccion);
@@ -41,11 +42,11 @@ public class ListaProducciones implements Serializable {
         herradura = new ArrayList<>();
         tabla = new ArrayList<>();
     }
-
+    
     public List<Produccion> getProducciones() {
         return producciones;
     }
-
+    
     public void realizarLALR(TablaDeSimbolos tabla) {
         if (producciones.size() > 0) {
             ArrayList<NodoSintactico> n = new ArrayList<>();
@@ -66,8 +67,11 @@ public class ListaProducciones implements Serializable {
                 }
             }
             for (NoTerminal noterminale : noterminales) {
-                ListaProducciones.encontrarPrimeros(this, noterminale, noterminale);
-
+                try {
+                    ListaProducciones.encontrarPrimeros(this, noterminale, noterminale);
+                } catch (Exception e) {
+                    ErrorSintactico.errorProduccion(noterminale, "Error al encontrar primeros");
+                }
             }
             I nuevo = new I();
             nuevo.setNivel(0);
@@ -75,39 +79,33 @@ public class ListaProducciones implements Serializable {
             p.setPospunto(0);
             nuevo.getProducciones().add(p);
             nuevo.setId(1);
-            nuevo = this.cerradura(nuevo);
-            herradura.add(nuevo);
-            this.ir_a(nuevo);
+            try {
+                nuevo = this.cerradura(nuevo);
+                herradura.add(nuevo);
+                this.ir_a(nuevo);
+            } catch (Exception e) {
+                ErrorSintactico.errorGeneral(e.getMessage());
+            }
             tablaTransicion = new OperacionSintactica[herradura.size()][noterminales.size() + terminales.size() + 1];
+            try {
             this.realizarGotoShift();
             this.realizarRemove();
-            for (Terminal terminale : terminales) {
-                System.out.print("|" + terminale + "|");
-            }
-            System.out.print("|$|");
-            for (NoTerminal noterminal : noterminales) {
-                System.out.print("|" + noterminal + "|");
-            }
-            System.out.println("");
-            for (int i = 0; i < tablaTransicion.length; i++) {
-                for (OperacionSintactica operacionSintactica : tablaTransicion[i]) {
-                    System.out.print("|" + operacionSintactica + "|");
-                }
-                System.out.println("");
+            } catch (Exception e) {
+                ErrorSintactico.errorGeneral(e.getMessage());
             }
             lalr = new LALR(herradura, terminales.size(), noterminales.size(), this);
             lalr.analizarLALR();
             this.tablaTransicion = lalr.getTablaTransicion();
         } else {
-
+            
         }
     }
-
+    
     public List<IrA> getTabla() {
         return tabla;
     }
-
-    public void realizarGotoShift() {
+    
+    public void realizarGotoShift() throws Exception {
         for (IrA ir : tabla) {
             boolean tr = true;
             int i = 0;
@@ -118,6 +116,8 @@ public class ListaProducciones implements Serializable {
                         if (op1 != null && (op == null || ((op instanceof Shift) && ((Shift) op).parecido((Shift) op1)))) {
                             tablaTransicion[ir.getInicial().getId() - 1][i] = op1;
                             tr = false;
+                        } else {
+                            throw new Exception("Conflictos en la tabla LR(1)");
                         }
                     }
                     i++;
@@ -129,6 +129,8 @@ public class ListaProducciones implements Serializable {
                         if (op1 != null && (op == null || ((op instanceof GoTo) && ((GoTo) op).parecido((GoTo) op1)))) {
                             tablaTransicion[ir.getInicial().getId() - 1][i + this.terminales.size() + 1] = op1;
                             tr = false;
+                        } else {
+                            throw new Exception("Conflictos en la tabla LR(1)");
                         }
                     }
                     i++;
@@ -136,7 +138,7 @@ public class ListaProducciones implements Serializable {
             }
         }
     }
-
+    
     public OperacionSintactica realizarOperacion(IrA ir, boolean terminal) {
         if (terminal) {
             Shift s = new Shift(ir);
@@ -146,8 +148,8 @@ public class ListaProducciones implements Serializable {
             return g;
         }
     }
-
-    public void realizarRemove() {
+    
+    public void realizarRemove() throws Exception {
         for (I i : herradura) {
             List<Remove> r = i.verRemoves();
             for (Remove remove : r) {
@@ -158,13 +160,16 @@ public class ListaProducciones implements Serializable {
                 OperacionSintactica op = this.tablaTransicion[i.getId() - 1][f[0]];
                 if (op == null || (op instanceof Remove && ((Remove) op).isIgual(remove))) {
                     this.tablaTransicion[i.getId() - 1][f[0]] = remove;
-                } else if (op instanceof Shift && i.getNivel()<=f[1]) {
+                } else if (op instanceof Shift && i.getNivel() <= f[1]) {
                     this.tablaTransicion[i.getId() - 1][f[0]] = remove;
+                } else if (op instanceof Remove){
+                    throw new Exception("Error en Conflictos en la producción: \n" 
+                            + remove.getPr().toString());
                 }
             }
         }
     }
-
+    
     public int[] posTerminal(Terminal t) {
         int[] in = new int[2];
         if (t == null) {
@@ -187,7 +192,7 @@ public class ListaProducciones implements Serializable {
         }
         return in;
     }
-
+    
     public I cerradura(I nuevo) {
         int i = 0;
         while (nuevo.getProducciones().size() > i) {
@@ -214,7 +219,7 @@ public class ListaProducciones implements Serializable {
         }
         return nuevo;
     }
-
+    
     public void ir_a(I estado) {
         for (NoTerminal terminale : noterminales) {
             I nuevo = new I();
@@ -287,7 +292,7 @@ public class ListaProducciones implements Serializable {
             }
         }
     }
-
+    
     public static void encontrarPrimeros(ListaProducciones n, NoTerminal noterminal, NoTerminal primeros) {
         for (Produccion produccione : n.getProducciones()) {
             if (produccione.getPrimerNodo().getNombre().equals(primeros.getNombre()) && !produccione.enproceso) {
@@ -295,7 +300,7 @@ public class ListaProducciones implements Serializable {
             }
         }
     }
-
+    
     public static boolean isAnulable(NodoSintactico no, ListaProducciones n) {
         if (no instanceof NoTerminal) {
             for (NoTerminal noterminale : n.getNoterminales()) {
@@ -306,11 +311,11 @@ public class ListaProducciones implements Serializable {
         }
         return false;
     }
-
+    
     public List<NoTerminal> getNoterminales() {
         return noterminales;
     }
-
+    
     public List<Terminal> getPrimeros(NodoSintactico n) {
         List<Terminal> t = new ArrayList<>();
         for (Terminal terminale : terminales) {
@@ -327,18 +332,18 @@ public class ListaProducciones implements Serializable {
         }
         return t;
     }
-
+    
     public List<Terminal> getTerminales() {
         return terminales;
     }
-
+    
     public OperacionSintactica[][] getTablaTransicion() {
         return tablaTransicion;
     }
-
+    
     public Produccion encontrar(Produccion pro) {
         for (Produccion produccione : producciones) {
-            if(produccione.esSim(pro)){
+            if (produccione.esSim(pro)) {
                 return produccione;
             }
         }

@@ -5,6 +5,7 @@
  */
 package com.mycompany.bowl.backend.lenguaje.semantico;
 
+import com.mycompany.bowl.backend.errores.ErrorSintactico;
 import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.Produccion;
 import java.io.IOException;
 import java.io.Serializable;
@@ -25,11 +26,13 @@ public class AnalisisCodigoJava implements Serializable {
 
     private final String nombre;
     private String codigo;
+    private String imp;
     private Class cl;
 
-    public AnalisisCodigoJava(String codigo, String nombre) {
+    public AnalisisCodigoJava(String imp, String codigo, String nombre) {
         this.codigo = codigo;
         this.nombre = nombre;
+        this.imp = imp;
     }
 
     public void ingresarClase() {
@@ -70,7 +73,7 @@ public class AnalisisCodigoJava implements Serializable {
                     s += produccion.getSemantico().getTexto() + "\n";
                 }
             }
-            codigo = "public class " + nombre + "{\n" + codigo + s + "\n}\n";
+            codigo = imp + "\npublic class " + nombre + "{\n" + codigo + s + "\n}\n";
             System.out.println(codigo);
             SimpleCompiler compiler;
             compiler = new SimpleCompiler();
@@ -81,18 +84,19 @@ public class AnalisisCodigoJava implements Serializable {
                 | IllegalAccessException | NoSuchMethodException*/
                 | SecurityException | IllegalArgumentException | ClassNotFoundException ex
                 /*| InvocationTargetException ex*/) {
-            Logger.getLogger(AnalisisCodigoJava.class.getName()).log(Level.SEVERE, null, ex);
+            ErrorSintactico.errorCodigo(ex.getMessage());
+            
         }
     }
     
-    public Object hacerMetodo(String metodo, Object[] identidades, Class[] clas) {
+    public Object hacerMetodo(Produccion pr, String metodo, Object[] identidades, Class[] clas) {
         try {
             Object arne = cl.newInstance();
             Method doWork = cl.getDeclaredMethod(metodo, clas);
             Object resultado = doWork.invoke(arne, identidades);
             return resultado;
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
-            Logger.getLogger(AnalisisCodigoJava.class.getName()).log(Level.SEVERE, null, ex);
+            ErrorSintactico.errorCodigo("error de logica en la semantica de la produccion: " + pr + "error: "+ ex.toString());
         }
         return null;
     }

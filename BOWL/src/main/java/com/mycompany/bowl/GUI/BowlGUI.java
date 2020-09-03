@@ -47,6 +47,8 @@ public class BowlGUI extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         guardarLenguaje = new GuardarLenguaje();
         this.agregarItems(guardarLenguaje.leerLenguaje());
+        BowlGUI.txtTerminal.setEditable(false);
+        BowlGUI.txtTerminal.setText("");
     }
 
     /**
@@ -60,8 +62,10 @@ public class BowlGUI extends javax.swing.JFrame {
 
         pnlPrincipal = new javax.swing.JPanel();
         lblSeleccionado = new javax.swing.JLabel();
-        tabbedTexto = new javax.swing.JTabbedPane();
-        lblColFil = new javax.swing.JLabel();
+        spnTerminal = new javax.swing.JSplitPane();
+        tbbPanel = new javax.swing.JTabbedPane();
+        spTerminal = new javax.swing.JScrollPane();
+        txtTerminal = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
         menuArchivo = new javax.swing.JMenu();
         itemAbrir = new javax.swing.JMenuItem();
@@ -91,6 +95,20 @@ public class BowlGUI extends javax.swing.JFrame {
         lblSeleccionado.setFont(new java.awt.Font("DejaVu Sans Condensed", 1, 14)); // NOI18N
         lblSeleccionado.setForeground(new java.awt.Color(255, 255, 255));
 
+        spnTerminal.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        tbbPanel.setMinimumSize(new java.awt.Dimension(1050, 400));
+        tbbPanel.setPreferredSize(new java.awt.Dimension(1050, 350));
+        spnTerminal.setLeftComponent(tbbPanel);
+
+        txtTerminal.setBackground(new java.awt.Color(51, 51, 51));
+        txtTerminal.setColumns(20);
+        txtTerminal.setForeground(new java.awt.Color(255, 5, 68));
+        txtTerminal.setRows(5);
+        spTerminal.setViewportView(txtTerminal);
+
+        spnTerminal.setRightComponent(spTerminal);
+
         javax.swing.GroupLayout pnlPrincipalLayout = new javax.swing.GroupLayout(pnlPrincipal);
         pnlPrincipal.setLayout(pnlPrincipalLayout);
         pnlPrincipalLayout.setHorizontalGroup(
@@ -98,11 +116,8 @@ public class BowlGUI extends javax.swing.JFrame {
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblSeleccionado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tabbedTexto)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPrincipalLayout.createSequentialGroup()
-                        .addGap(0, 903, Short.MAX_VALUE)
-                        .addComponent(lblColFil, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(spnTerminal, javax.swing.GroupLayout.DEFAULT_SIZE, 1565, Short.MAX_VALUE)
+                    .addComponent(lblSeleccionado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnlPrincipalLayout.setVerticalGroup(
@@ -111,9 +126,7 @@ public class BowlGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lblSeleccionado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(tabbedTexto, javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblColFil, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(spnTerminal, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -252,47 +265,62 @@ public class BowlGUI extends javax.swing.JFrame {
             NumeroLinea linea = new NumeroLinea(area);
             pane.setViewportView(area);
             pane.setRowHeaderView(linea);
-            tabbedTexto.addTab(file.getName(), null, pane, file.getPath());
+            tbbPanel.addTab(file.getName(), null, pane, file.getPath());
         }
     }//GEN-LAST:event_itemAbrirActionPerformed
 
 
     private void itemCargarLenguajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCargarLenguajeActionPerformed
-        try {
-            // TODO add your handling code here:
-            String s = apertura.leerTexto(tabbedTexto.getToolTipTextAt(tabbedTexto.getSelectedIndex()));
-            SintaxisLenguajes lengua = new SintaxisLenguajes(new LexicoLenguaje(new StringReader(s)));
-            Lenguaje len = (Lenguaje) lengua.parse().value;
-            if (len != null) {
-                boolean encontrado = false;
-                ItemLenguaje leng = null;
-                for (int i = 0; i < menuLenguajes.getItemCount(); i++) {
-                    leng = (ItemLenguaje) menuLenguajes.getItem(i);
-                    if (leng.getLenguaje().getInfo().getNombre().equals(len.getInfo().getNombre())) {
-                        encontrado = true;
-                        break;
+        BowlGUI.txtTerminal.setText("");
+        String extension = tbbPanel.getTitleAt(tbbPanel.getSelectedIndex());
+        int ex = extension.lastIndexOf('.') + 1;
+        if (ex < extension.length()) {
+            extension = extension.substring(ex);
+            if (extension.equals("len")) {
+                try {
+                    // TODO add your handling code here:
+                    String s = apertura.leerTexto(tbbPanel.getToolTipTextAt(tbbPanel.getSelectedIndex()));
+                    SintaxisLenguajes lengua = new SintaxisLenguajes(new LexicoLenguaje(new StringReader(s)));
+                    Lenguaje len = (Lenguaje) lengua.parse().value;
+                    if (len != null && (BowlGUI.txtTerminal.getText() == null || BowlGUI.txtTerminal.getText().equals(""))) {
+                        BowlGUI.txtTerminal.setText("--------------LENGUAJE ANALIZADO DE MANERA CORRECTA--------------");
+                        boolean encontrado = false;
+                        ItemLenguaje leng = null;
+                        for (int i = 0; i < menuLenguajes.getItemCount(); i++) {
+                            leng = (ItemLenguaje) menuLenguajes.getItem(i);
+                            if (leng.getLenguaje().getInfo().getNombre().equals(len.getInfo().getNombre())) {
+                                encontrado = true;
+                                break;
+                            }
+                        }
+                        guardarLenguaje.guardarLenguaje(len, len.getInfo().getNombre());
+                        if (!encontrado) {
+                            ItemLenguaje item = new ItemLenguaje(len, this), item2 = new ItemLenguaje(len, this, true);
+                            item.setHermano(item2);
+                            item2.setHermano(item);
+                            menuLenguajes.add(item);
+                            menuBorrar.add(item2);
+                        } else if (leng != null) {
+                            leng.cambiarLenguaje(len);
+                        }
+                    } else {
+                        BowlGUI.txtTerminal.append("----------------ERROR AL ANALIZAR LENGUAJE--------------------");
                     }
-                }
-                System.out.println(len.getInfo().getAutor());
-                guardarLenguaje.guardarLenguaje(len, len.getInfo().getNombre());
-                if (!encontrado) {
-                    ItemLenguaje item = new ItemLenguaje(len, this), item2 = new ItemLenguaje(len, this, true);
-                    item.setHermano(item2);
-                    item2.setHermano(item);
-                    menuLenguajes.add(item);
-                    menuBorrar.add(item2);
-                } else if (leng != null) {
-                    leng.cambiarLenguaje(len);
-                }
-            }
-            //len.getAnalisis().analizarSintactico("4+9*3/5+3");
-            /*Token tok;
+                    //len.getAnalisis().analizarSintactico("4+9*3/5+3");
+                    /*Token tok;
             do {                
                 tok = len.getAnalisis().analizarTexto("**=");
                 System.out.println(tok);
             } while (tok!=null && !tok.isUltimo());*/
-        } catch (Exception ex) {
-            System.out.println(ex);
+                } catch (Exception e) {
+                    BowlGUI.txtTerminal.append(e.getMessage() + "\n");
+                    BowlGUI.txtTerminal.append("ERROR TERMINAL");
+                }
+            } else {
+                BowlGUI.txtTerminal.append("La extesión no es .len, verificar el archivo\n");
+            }
+        } else {
+            BowlGUI.txtTerminal.append("No tiene extensión o tiene un nombre que no se acepta.\n");
         }
     }//GEN-LAST:event_itemCargarLenguajeActionPerformed
 
@@ -303,21 +331,21 @@ public class BowlGUI extends javax.swing.JFrame {
 
     private void itemGuardarComoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemGuardarComoActionPerformed
         // TODO add your handling code here:
-        JScrollPane pane = (JScrollPane) tabbedTexto.getComponentAt(tabbedTexto.getSelectedIndex());
+        JScrollPane pane = (JScrollPane) tbbPanel.getComponentAt(tbbPanel.getSelectedIndex());
         JTextPane area = (JTextPane) pane.getViewport().getView();
         File f = guardado.guardarArchivoComo(area.getText(), this);
         if (f == null) {
             JOptionPane.showMessageDialog(this, "Error, no se pudo guardar archivo.");
         } else {
-            tabbedTexto.setTitleAt(tabbedTexto.getSelectedIndex(), f.getName());
-            tabbedTexto.setToolTipTextAt(tabbedTexto.getSelectedIndex(), f.getPath());
+            tbbPanel.setTitleAt(tbbPanel.getSelectedIndex(), f.getName());
+            tbbPanel.setToolTipTextAt(tbbPanel.getSelectedIndex(), f.getPath());
         }
     }//GEN-LAST:event_itemGuardarComoActionPerformed
 
     private void itemGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemGuardarActionPerformed
         // TODO add your handling code here:
-        String s = tabbedTexto.getToolTipTextAt(tabbedTexto.getSelectedIndex());
-        JScrollPane pane = (JScrollPane) tabbedTexto.getComponentAt(tabbedTexto.getSelectedIndex());
+        String s = tbbPanel.getToolTipTextAt(tbbPanel.getSelectedIndex());
+        JScrollPane pane = (JScrollPane) tbbPanel.getComponentAt(tbbPanel.getSelectedIndex());
         JTextPane area = (JTextPane) pane.getViewport().getView();
         if (s != null) {
             if (!guardado.guardarArchivo(new File(s), area.getText())) {
@@ -328,8 +356,8 @@ public class BowlGUI extends javax.swing.JFrame {
             if (f == null) {
                 JOptionPane.showMessageDialog(this, "Error, no se pudo guardar archivo.");
             } else {
-                tabbedTexto.setTitleAt(tabbedTexto.getSelectedIndex(), f.getName());
-                tabbedTexto.setToolTipTextAt(tabbedTexto.getSelectedIndex(), f.getPath());
+                tbbPanel.setTitleAt(tbbPanel.getSelectedIndex(), f.getName());
+                tbbPanel.setToolTipTextAt(tbbPanel.getSelectedIndex(), f.getPath());
             }
         }
     }//GEN-LAST:event_itemGuardarActionPerformed
@@ -362,24 +390,24 @@ public class BowlGUI extends javax.swing.JFrame {
         NumeroLinea linea = new NumeroLinea(area);
         pane.setViewportView(area);
         pane.setRowHeaderView(linea);
-        tabbedTexto.addTab(null, null, pane, null);
+        tbbPanel.addTab(null, null, pane, null);
     }//GEN-LAST:event_itemNuevoActionPerformed
 
     private void itemCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCompilarActionPerformed
         // TODO add your handling code here:
-        String extension = tabbedTexto.getTitleAt(tabbedTexto.getSelectedIndex());
+        BowlGUI.txtTerminal.setText("");
+        String extension = tbbPanel.getTitleAt(tbbPanel.getSelectedIndex());
         int ex = extension.lastIndexOf('.') + 1;
         if (ex < extension.length()) {
             extension = extension.substring(ex);
-            System.out.println("extension: " + extension);
             if (this.seleccionado != null && extension.equals(this.seleccionado.getLenguaje().getInfo().getExtension())) {
-                String s = apertura.leerTexto(tabbedTexto.getToolTipTextAt(tabbedTexto.getSelectedIndex()));
+                String s = apertura.leerTexto(tbbPanel.getToolTipTextAt(tbbPanel.getSelectedIndex()));
                 this.seleccionado.getLenguaje().getAnalisis().analizarSintactico(s);
             } else {
-                JOptionPane.showMessageDialog(this, "La extesión no coincide con el Lenguaje Seleccionado.");
+                BowlGUI.txtTerminal.append("La extesión no coincide con el Lenguaje Seleccionado.\n");
             }
         } else {
-            JOptionPane.showMessageDialog(this, "No tiene extensión o tiene un nombre que no se acepta");
+            BowlGUI.txtTerminal.append("No tiene extensión o tiene un nombre que no se acepta.\n");
         }
     }//GEN-LAST:event_itemCompilarActionPerformed
 
@@ -393,13 +421,13 @@ public class BowlGUI extends javax.swing.JFrame {
 
     private void itemCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCerrarActionPerformed
         // TODO add your handling code here:
-        if (JOptionPane.showConfirmDialog(this, "¿Esta seguro de cerrar esta pestaña?", this.tabbedTexto.getTitleAt(tabbedTexto.getSelectedIndex()), JOptionPane.OK_OPTION)
+        if (JOptionPane.showConfirmDialog(this, "¿Esta seguro de cerrar esta pestaña?", this.tbbPanel.getTitleAt(tbbPanel.getSelectedIndex()), JOptionPane.OK_OPTION)
                 == JOptionPane.OK_OPTION) {
-            if (JOptionPane.showConfirmDialog(this, "¿Desea guardar los datos de la pestaña?", this.tabbedTexto.getTitleAt(tabbedTexto.getSelectedIndex()), JOptionPane.OK_OPTION)
+            if (JOptionPane.showConfirmDialog(this, "¿Desea guardar los datos de la pestaña?", this.tbbPanel.getTitleAt(tbbPanel.getSelectedIndex()), JOptionPane.OK_OPTION)
                     == JOptionPane.OK_OPTION) {
                 this.itemGuardarActionPerformed(evt);
             }
-            this.tabbedTexto.removeTabAt(tabbedTexto.getSelectedIndex());
+            this.tbbPanel.removeTabAt(tbbPanel.getSelectedIndex());
         }
     }//GEN-LAST:event_itemCerrarActionPerformed
 
@@ -432,7 +460,6 @@ public class BowlGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemNuevo;
     private javax.swing.JMenuItem itemPila;
     private javax.swing.JMenuItem itemSalir;
-    private javax.swing.JLabel lblColFil;
     private javax.swing.JLabel lblSeleccionado;
     private javax.swing.JMenu menuArchivo;
     private javax.swing.JMenuBar menuBar;
@@ -441,6 +468,9 @@ public class BowlGUI extends javax.swing.JFrame {
     private javax.swing.JMenu menuLenguajes;
     private javax.swing.JMenu menuVer;
     private javax.swing.JPanel pnlPrincipal;
-    private javax.swing.JTabbedPane tabbedTexto;
+    private javax.swing.JScrollPane spTerminal;
+    private javax.swing.JSplitPane spnTerminal;
+    private javax.swing.JTabbedPane tbbPanel;
+    public static javax.swing.JTextArea txtTerminal;
     // End of variables declaration//GEN-END:variables
 }

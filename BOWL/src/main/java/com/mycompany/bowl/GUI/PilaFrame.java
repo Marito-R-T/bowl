@@ -56,7 +56,7 @@ public class PilaFrame extends javax.swing.JFrame {
         spNodo = new javax.swing.JScrollPane();
         pnlNodos = new javax.swing.JPanel();
 
-        setBackground(new java.awt.Color(102, 102, 102));
+        setBackground(new java.awt.Color(51, 51, 51));
 
         btnSiguiente.setText("Siguiente");
         btnSiguiente.addActionListener(new java.awt.event.ActionListener() {

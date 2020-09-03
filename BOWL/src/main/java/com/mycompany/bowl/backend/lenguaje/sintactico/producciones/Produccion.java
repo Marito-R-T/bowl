@@ -188,7 +188,11 @@ public class Produccion implements Serializable {
 
     @Override
     public String toString() {
-        return productora.toString();
+        String s = this.productora.getNombre() + " :: ";
+        for (NodoSintactico producido : this.producidos) {
+            s += producido.getNombre() + " ";
+        }
+        return s;
     }
 
     public void agregarSiguientes(List<Terminal> sig) {
@@ -214,7 +218,7 @@ public class Produccion implements Serializable {
         }
         System.out.println(this.getPrimerNodo().getNombre());
         String tipo = tabla.getTipo(this.getPrimerNodo().getNombre());
-        this.semantico.agregarTexto("azbyñkolewncvpasd"+i, id, tipo);
+        this.semantico.agregarTexto("azbyñkolewncvpasd" + i, id, tipo);
     }
-    
+
 }

@@ -59,7 +59,8 @@ public class ItemLenguaje extends JMenuItem {
     public void hacerAccion(ActionEvent evt) {
         if (bowl != null) {
             bowl.setSeleccionado(this);
-            bowl.getLblSeleccionado().setText("Lenguaje Seleccionado: " + this.lenguaje.getInfo().getNombre());
+            bowl.getLblSeleccionado().setText("Lenguaje Seleccionado: " + this.lenguaje.getInfo().getNombre() + "    versión: " + this.lenguaje.getInfo().getVersion()
+                    + "   ext: " + this.lenguaje.getInfo().getExtension()+ "   autor: " + this.lenguaje.getInfo().getAutor());
         }
     }
 

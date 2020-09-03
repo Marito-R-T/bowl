@@ -20,7 +20,9 @@ public class prueba {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        System.out.println("resultado : " + (1 + 6 + 4 * 9 / 8 + 6 - 6));
+        String s = "if (val2 = = 2)";
+        System.out.println(s.replaceAll("= =", "=="));
+        /*System.out.println("resultado : " + (1 + 6 + 4 * 9 / 8 + 6 - 6));
         try {
             String javaSource = "public class prueba {\n"
                     + "\n"

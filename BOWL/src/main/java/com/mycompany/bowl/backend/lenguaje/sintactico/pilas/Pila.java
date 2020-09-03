@@ -5,6 +5,8 @@
  */
 package com.mycompany.bowl.backend.lenguaje.sintactico.pilas;
 
+import com.mycompany.bowl.backend.errores.ErrorSintactico;
+import com.mycompany.bowl.backend.lenguaje.lexico.Token;
 import com.mycompany.bowl.backend.lenguaje.semantico.AnalisisCodigoJava;
 import com.mycompany.bowl.backend.lenguaje.sintactico.TablaDeSimbolos;
 import com.mycompany.bowl.backend.lenguaje.sintactico.pilas.muestra.PilaMuestra;
@@ -48,7 +50,7 @@ public class Pila implements Serializable {
         muestra.agregarMuestra(pila, arriba, "goTo" + estado);
     }
 
-    public NodoPila remove(Produccion pro, int produccion, ListaProducciones lista) {
+    public NodoPila remove(Token tok, Produccion pro, int produccion, ListaProducciones lista) {
         List<Object> object = new ArrayList<>();
         for (int i = pro.getProducidos().size() - 1; i >= 0; i--) {
             if (arriba.getNombre().equals(pro.getProducidos().get(i).getNombre())) {
@@ -61,6 +63,8 @@ public class Pila implements Serializable {
                 EstadoPila p = this.pila.getAnterior();
                 this.pila.setAnterior(null);
                 this.pila = p;
+            } else {
+                ErrorSintactico.errorTokenSintactico(tok);
             }
         }
         Object[] ob = new Object[object.size()];
@@ -69,7 +73,7 @@ public class Pila implements Serializable {
         }
         Produccion pr = lista.encontrar(pro);
         System.out.println("el metodo usado es: " +  pr.getSemantico().getId());
-        Object resultado = analisis.hacerMetodo(pr.getSemantico().getId(), ob, pr.getSemantico().getClas());
+        Object resultado = analisis.hacerMetodo(pr, pr.getSemantico().getId(), ob, pr.getSemantico().getClas());
         NodoPila nodo = new NodoPila(pr.getPrimerNodo());
         nodo.setValor(resultado);
         nodo.setAnterior(arriba);

@@ -9,6 +9,7 @@ import java.util.List;
 import com.mycompany.bowl.backend.lenguaje.sintactico.*;
 import com.mycompany.bowl.backend.lenguaje.sintactico.producciones.*;
 import com.mycompany.bowl.backend.lenguaje.semantico.Semantico;
+import com.mycompany.bowl.backend.errores.ErrorSintactico;
 
 class SintaxisLenguajes;
 
@@ -17,15 +18,14 @@ parser code
     private Symbol s;
     
     public void syntax_error(Symbol s){
-        System.out.println("letra: "+s.value +"  linea: "+(s.right+1) +"  columna: "+(s.left+1) +  " Simbolo: "+s.sym);
+        ErrorSintactico.informarError(s);
     }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
-        System.out.println("letra: "+s.value +"  linea: "+(s.right+1) +"  columna: "+(s.left+1) + " Simbolo: "+s.sym);
+        ErrorSintactico.informarError(s);
     }
 
     public Symbol getS(){
-        System.out.println(this.s);
         return this.s;
     }
 :};
@@ -34,12 +34,12 @@ parser code
 terminal String or, version, autor, lanzamiento, extension, term, no, result;
 terminal String llavea, llavec, y, pord, coma, igual, corchetea, corchetec, parentesisa, parentesisc;
 terminal String mas, mult, menos, div, percent, puntocoma, dosp, lin, tab, esp, comilla, pre, punto;
-terminal String codigo, nom, pp, dpp, printf, str, entero, real, cadena;
+terminal String codigo, nom, pp, dpp, printf, str, entero, real, cadena, imp;
 terminal String number, idt, id, idn, caracterma, caracterme, llavecp, e;
 
 non terminal Lenguaje S;
 non terminal InfoLenguaje INFO, INFOP;
-non terminal String VR, NOM, ID, IDT, IDN, COD, CODP, NUMBER, TIPO;
+non terminal String VR, NOM, ID, IDT, IDN, COD, CODP, NUMBER, TIPO, IMPORT, IMPORTP, IDIMP;
 non terminal Integer NUMBERN;
 non terminal ArrayList<NodoSintactico> PR;
 non terminal TablaDeSimbolos TER;
@@ -58,9 +58,25 @@ non terminal ArbolBinario ;*/
 
 start with S;
 
-S ::= INFO:e1 pp COD:e2 pp EXP:e3 pp TER:e4 pp PROD:e5 {:Lenguaje lenguaje = new Lenguaje(); lenguaje.setInfo(e1); lenguaje.realizarCodigo(e2); lenguaje.setBinario(e3); 
+S ::= INFO:e1 pp IMPORT:e6 COD:e2 pp EXP:e3 pp TER:e4 pp PROD:e5 {:Lenguaje lenguaje = new Lenguaje(); lenguaje.setInfo(e1); lenguaje.realizarCodigo(e6, e2); lenguaje.setBinario(e3); 
                                                             lenguaje.setTablaSimbolos(e4); lenguaje.setProducciones(e5); RESULT = lenguaje;:}                                                       
-                                                          
+    | INFO:e1 pp IMPORT:e2 pp EXP:e3 pp TER:e4 pp PROD:e5 {:Lenguaje lenguaje = new Lenguaje(); lenguaje.setInfo(e1); lenguaje.realizarCodigo(e2, ""); lenguaje.setBinario(e3); 
+                                                            lenguaje.setTablaSimbolos(e4); lenguaje.setProducciones(e5); RESULT = lenguaje;:}
+    | INFO:e1 pp pp EXP:e3 pp TER:e4 pp PROD:e5 {:Lenguaje lenguaje = new Lenguaje(); lenguaje.setInfo(e1); lenguaje.realizarCodigo("", ""); lenguaje.setBinario(e3); 
+                                                            lenguaje.setTablaSimbolos(e4); lenguaje.setProducciones(e5); RESULT = lenguaje;:}
+    | INFO:e1 pp COD:e2 pp EXP:e3 pp TER:e4 pp PROD:e5 {:Lenguaje lenguaje = new Lenguaje(); lenguaje.setInfo(e1); lenguaje.realizarCodigo("", e2); lenguaje.setBinario(e3); 
+                                                            lenguaje.setTablaSimbolos(e4); lenguaje.setProducciones(e5); RESULT = lenguaje;:}
+;
+
+IMPORT ::= IMPORT:e1 IMPORTP:e2 {:RESULT = e1+"\n"+e2;:}
+        | IMPORTP:e1 {:RESULT = e1;:}
+;
+
+IMPORTP ::= imp IDIMP:e1 puntocoma {:RESULT = "import " + e1 + ";";:}
+;
+
+IDIMP ::= IDIMP:e1 punto ID:e2 {:RESULT = e1+"."+e2;:}
+        | ID:e1 {:RESULT = e1;:}
 ;
 
 INFO ::= INFO:e1 INFOP:e2 {:e1.ingresarDato(e2); RESULT = e1;:}
@@ -126,12 +142,12 @@ TER ::= TER:e1 N:e2 puntocoma {:e1.getNoterminal().addAll(e2); RESULT =e1;:}
     | error pp {:RESULT = null;:}
 ;
 
-T ::= T:e1 coma IDT:e2 {:e1.add(new Terminal(e2)); RESULT = e1;:}
+T ::= T:e1 coma IDT:e2 {:e1.add(new Terminal(e2), true); RESULT = e1;:}
     | term TIPO:e2 IDT:e1 {:ListaNodoSintactico<Terminal> n = new ListaNodoSintactico<>(e2); n.add(new Terminal(e1), true); RESULT = n;:}
     | error term TIPO:e2 IDT:e1 {:ListaNodoSintactico<Terminal> n = new ListaNodoSintactico<>(e2); n.add(new Terminal(e1), true); RESULT = n;:}
 ;
 
-N ::= N:e1 coma IDN:e2 {:e1.add(new NoTerminal(e2)); RESULT = e1;:}
+N ::= N:e1 coma IDN:e2 {:e1.add(new NoTerminal(e2), true); RESULT = e1;:}
     | no term TIPO:e2 IDN:e1 {:ListaNodoSintactico<NoTerminal> n = new ListaNodoSintactico<>(e2); n.add(new NoTerminal(e1), true); RESULT = n;:}
     | error no term TIPO:e2 IDN:e1 {:ListaNodoSintactico<NoTerminal> n = new ListaNodoSintactico<>(e2); n.add(new NoTerminal(e1), true); RESULT = n;:}
 ;
@@ -142,6 +158,7 @@ PROD ::= PROD:e1 PRODP:e2 {:e1.getProducciones().add(e2); RESULT = e1;:}
 ;
 
 PRODP ::= IDN:e1 dpp PR:e2 SEM:e3 {:RESULT = new Produccion(new NoTerminal(e1), e2, e3);:}
+        | IDN:e1 dpp SEM:e3 {:ArrayList<NodoSintactico> e2 = new ArrayList<>(); RESULT = new Produccion(new NoTerminal(e1), e2, e3);:}
 ;
 
 PR ::= PR:e1 TE:e2 {:e1.add(e2); RESULT = e1;:}
@@ -160,11 +177,11 @@ NO ::= IDN:e1 dosp ID:e2 {:RESULT = new NoTerminal(e1, e2);:}
     | error NO:e1 {:RESULT = e1;:}
 ;
 
-SEM ::= llavea COD:e1 result igual COD:e2 llavecp {:RESULT = new Semantico(e1+"return "+ e2);:}
-        | llavea result igual COD:e2 llavecp {:RESULT = new Semantico("return "+ e2);:}
-        | llavea llavecp {:RESULT = new Semantico("return null;");:}
-        | puntocoma {:RESULT = new Semantico("return null;");:}
-        | error puntocoma {:RESULT = new Semantico("return null;");:}
+SEM ::= llavea COD:e1 llavecp {:System.out.println(e1); e1 = e1.replaceAll("= =", "=="); e1 = e1.replaceAll("RESULT =","return ");
+                                                 e1 = e1.replaceAll("RESULT=", "return "); RESULT = new Semantico(e1+"\n");:}
+        | llavea llavecp {:RESULT = new Semantico("return null;\n");:}
+        | puntocoma {:RESULT = new Semantico("return null;\n");:}
+        | error puntocoma {:RESULT = new Semantico("return null;\n");:}
 ;
 
 /*RES ::= result igual OP puntocoma
@@ -219,7 +236,7 @@ CODP ::= or:e1 {:RESULT = e1;:}| nom:e1 {:RESULT = e1;:}| version:e1 {:RESULT = 
     | esp:e1 {:RESULT = e1;:}| comilla:e1 {:RESULT = e1;:}| pre:e1 {:RESULT = e1;:}| punto:e1 {:RESULT = e1;:}
     | caracterma:e1 {:RESULT = e1;:} | caracterme:e1 {:RESULT = e1;:} | idt:e1 {:RESULT = e1;:}| idn:e1| number:e1 {:RESULT = e1;:}
     | codigo:e1 {:RESULT = e1;:}| id:e1 {:RESULT = e1;:}| dpp:e1 {:RESULT = e1;:} | entero:e1 {:RESULT = e1;:} 
-    | real:e1 {:RESULT = e1;:} | cadena:e1 {:RESULT = e1;:} | e:e1 {:RESULT = e1;:}
+    | real:e1 {:RESULT = e1;:} | cadena:e1 {:RESULT = e1;:} | e:e1 {:RESULT = e1;:} | result {:RESULT = "RESULT";:}
 ;
 
 /*NUMBERN ::= NUMBER:e1 {:RESULT = Integer.parseInt(e1);:}

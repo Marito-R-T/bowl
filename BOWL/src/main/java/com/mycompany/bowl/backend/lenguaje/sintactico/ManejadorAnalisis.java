@@ -5,6 +5,8 @@
  */
 package com.mycompany.bowl.backend.lenguaje.sintactico;
 
+import com.mycompany.bowl.GUI.BowlGUI;
+import com.mycompany.bowl.backend.errores.ErrorSintactico;
 import com.mycompany.bowl.backend.lenguaje.lexico.ArbolBinario;
 import com.mycompany.bowl.backend.lenguaje.lexico.Token;
 import com.mycompany.bowl.backend.lenguaje.semantico.AnalisisCodigoJava;
@@ -57,12 +59,14 @@ public class ManejadorAnalisis implements Serializable {
                 tam += token.getTamano();
                 return token;
             } else {
+                int line1 = line, column1 = column;
                 if (s.charAt(tam) == '\n') {
                     line++;
                     column = 0;
                 }
+                String si = s.charAt(tam) + "";
                 tam++;
-                return null;
+                return new Token(line1, column1, tam, line1, column1, false, si, null, null);
             }
         } else {
             return new Token(line, column, 0, 0, column, true, null, null, null);
@@ -73,11 +77,12 @@ public class ManejadorAnalisis implements Serializable {
         this.line = 0;
         this.column = 0;
         this.tam = 0;
-        this.pila = new Pila(analisis);
+        //this.pila = new Pila(analisis);
     }
 
     public Object analizarSintactico(String s) {
         this.reiniciarAnalisis();
+        Pila nuevaPila = new Pila(analisis);
         Token tok;
         Object o = null;
         do {
@@ -85,35 +90,41 @@ public class ManejadorAnalisis implements Serializable {
                 tok = this.analizarTexto(s);
             } while (tok != null && tok.getNombre() == null && !tok.isUltimo());
             System.out.println(tok);
-            if (tok != null) {
+            if (tok != null && (tok.getNombre() != null || tok.isUltimo())) {
                 //o = producciones.realizarAnalisis(tok);
                 OperacionSintactica op;
-                op = producciones.getTablaTransicion()[pila.getPila().getNumero() - 1][tablaSimbolos.posTerminal(tok)];
+                op = producciones.getTablaTransicion()[nuevaPila.getPila().getNumero() - 1][tablaSimbolos.posTerminal(tok)];
                 while (op != null) {
                     if (op instanceof Aceptar) {
-                        pila.agregarAceptacion();
-                        System.out.println("aceptado");
-                        return null;
+                        nuevaPila.agregarAceptacion();
+                        if (BowlGUI.txtTerminal == null || BowlGUI.txtTerminal.getText().equals("")) {
+                            this.pila = nuevaPila;
+                            BowlGUI.txtTerminal.append("-------- Analisis del Lenguaje llevado correctamente---------\n"
+                                    + "\nEl resultado es: " + pila.getArriba().getValor());
+                            return pila.getArriba().getValor();
+                        } else {
+                            return false;
+                        }
                     }
                     if (op instanceof Shift) {
                         System.out.println("shift");
-                        System.out.println(((Shift)op).getIra().getDestino().getId());
-                        pila.shift(new NodoPila(((Shift) op).getNodo()), ((Shift) op).getIra().getDestino().getId2(), tok.getObject());
+                        System.out.println(((Shift) op).getIra().getDestino().getId());
+                        nuevaPila.shift(new NodoPila(((Shift) op).getNodo()), ((Shift) op).getIra().getDestino().getId2(), tok.getObject());
                         op = null;
                     } else if (op instanceof Remove) {
                         System.out.println("remove");
-                        NodoPila p = pila.remove(((Remove) op).getPr(), (((Remove) op).getPro() + 1), producciones);
-                        op = producciones.getTablaTransicion()[pila.getPila().getNumero() - 1][tablaSimbolos.posNoTerminal(p.getNombre())];
+                        NodoPila p = nuevaPila.remove(tok, ((Remove) op).getPr(), (((Remove) op).getPro() + 1), producciones);
+                        op = producciones.getTablaTransicion()[nuevaPila.getPila().getNumero() - 1][tablaSimbolos.posNoTerminal(p.getNombre())];
                     } else if (op instanceof GoTo) {
                         System.out.println("goto");
-                        pila.goTo(((GoTo) op).getIra().getDestino().getId2());
-                        op = producciones.getTablaTransicion()[pila.getPila().getNumero() - 1][tablaSimbolos.posTerminal(tok)];
+                        nuevaPila.goTo(((GoTo) op).getIra().getDestino().getId2());
+                        op = producciones.getTablaTransicion()[nuevaPila.getPila().getNumero() - 1][tablaSimbolos.posTerminal(tok)];
                     } else {
-                        System.out.println(" hahahaha");
+                        ErrorSintactico.errorTokenSintactico(tok);
                     }
                 }
-            } else {
-                System.out.println("error sintactico.");
+            } else if (tok != null) {
+                ErrorSintactico.errorToken(tok);
             }
         } while (tok == null || !tok.isUltimo());
         //this.producciones.getTablaTransicion()

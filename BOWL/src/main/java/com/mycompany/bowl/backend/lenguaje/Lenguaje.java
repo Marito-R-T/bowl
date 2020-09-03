@@ -5,6 +5,7 @@
  */
 package com.mycompany.bowl.backend.lenguaje;
 
+import com.mycompany.bowl.backend.errores.ErrorSintactico;
 import com.mycompany.bowl.backend.lenguaje.semantico.AnalisisCodigoJava;
 import com.mycompany.bowl.backend.lenguaje.lexico.ArbolBinario;
 import com.mycompany.bowl.backend.lenguaje.lexico.nodos.Nodo;
@@ -31,8 +32,12 @@ public class Lenguaje implements Serializable {
     public Lenguaje() {
     }
 
-    public void realizarCodigo(String codigo) {
-        this.codigo = new AnalisisCodigoJava(codigo, "CodigoJava");
+    public void realizarCodigo(String imp, String codigo) {
+        try {
+            this.codigo = new AnalisisCodigoJava(imp, codigo, "CodigoJava");
+        } catch (Exception e) {
+            ErrorSintactico.errorCodigo(e.toString());
+        }
     }
 
     public InfoLenguaje getInfo() {
@@ -52,8 +57,12 @@ public class Lenguaje implements Serializable {
     }
 
     public void setBinario(Nodo binario) {
-        this.binario = new ArbolBinario(binario);
-        this.binario.crearAFD();
+        try {
+            this.binario = new ArbolBinario(binario);
+            this.binario.crearAFD();
+        } catch (Exception e) {
+            ErrorSintactico.errorExpresion(e.toString());
+        }
     }
 
     public TablaDeSimbolos getTablaSimbolos() {
@@ -69,16 +78,20 @@ public class Lenguaje implements Serializable {
     }
 
     public void setProducciones(ListaProducciones producciones) {
-        this.producciones = producciones;
-        this.producciones.realizarLALR(tablaSimbolos);
-        this.analisis = new ManejadorAnalisis(binario, tablaSimbolos, this.producciones);
-        this.tablaLALR = new TablaLALR(this.producciones.getTablaTransicion(), this.info.getNombre(), tablaSimbolos);
-        for (int i = 1; i < producciones.getProducciones().size(); i++) {
-            producciones.getProducciones().get(i).hacerSemantico(i, tablaSimbolos);
-            System.out.println(producciones.getProducciones().get(i).getSemantico().getTexto());
+        try {
+            this.producciones = producciones;
+            this.producciones.realizarLALR(tablaSimbolos);
+            this.analisis = new ManejadorAnalisis(binario, tablaSimbolos, this.producciones);
+            this.tablaLALR = new TablaLALR(this.producciones.getTablaTransicion(), this.info.getNombre(), tablaSimbolos);
+            for (int i = 1; i < producciones.getProducciones().size(); i++) {
+                producciones.getProducciones().get(i).hacerSemantico(i, tablaSimbolos);
+                System.out.println(producciones.getProducciones().get(i).getSemantico().getTexto());
+            }
+            this.codigo.hacermetodos(this.producciones.getProducciones());
+            analisis.setAnalisis(codigo);
+        } catch (Exception e) {
+            ErrorSintactico.errorGeneral(e.toString());
         }
-        this.codigo.hacermetodos(this.producciones.getProducciones());
-        analisis.setAnalisis(codigo);
     }
 
     public ManejadorAnalisis getAnalisis() {

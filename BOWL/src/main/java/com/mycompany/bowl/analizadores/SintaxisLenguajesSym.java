@@ -8,13 +8,14 @@ package com.mycompany.bowl.analizadores;
 /** CUP generated class containing symbol constants. */
 public class SintaxisLenguajesSym {
   /* terminals */
-  public static final int caracterme = 47;
+  public static final int caracterme = 48;
   public static final int percent = 24;
   public static final int printf = 37;
   public static final int comilla = 30;
-  public static final int idn = 45;
-  public static final int caracterma = 46;
+  public static final int idn = 46;
+  public static final int caracterma = 47;
   public static final int lin = 27;
+  public static final int imp = 42;
   public static final int lanzamiento = 5;
   public static final int coma = 14;
   public static final int igual = 15;
@@ -38,10 +39,10 @@ public class SintaxisLenguajesSym {
   public static final int punto = 32;
   public static final int str = 38;
   public static final int autor = 4;
-  public static final int id = 44;
+  public static final int id = 45;
   public static final int dpp = 36;
   public static final int y = 12;
-  public static final int llavecp = 48;
+  public static final int llavecp = 49;
   public static final int mult = 21;
   public static final int pre = 31;
   public static final int corchetec = 17;
@@ -53,10 +54,10 @@ public class SintaxisLenguajesSym {
   public static final int nom = 34;
   public static final int version = 3;
   public static final int div = 23;
-  public static final int e = 49;
+  public static final int e = 50;
   public static final int no = 8;
-  public static final int idt = 43;
-  public static final int number = 42;
+  public static final int idt = 44;
+  public static final int number = 43;
   public static final int cadena = 41;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -101,6 +102,7 @@ public class SintaxisLenguajesSym {
   "entero",
   "real",
   "cadena",
+  "imp",
   "number",
   "idt",
   "id",

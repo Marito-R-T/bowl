@@ -5,6 +5,7 @@
  */
 package com.mycompany.bowl.backend.lenguaje.sintactico;
 
+import com.mycompany.bowl.backend.errores.ErrorSintactico;
 import com.mycompany.bowl.backend.lenguaje.sintactico.lalr.GoTo;
 import com.mycompany.bowl.backend.lenguaje.sintactico.lalr.OperacionSintactica;
 import com.mycompany.bowl.backend.lenguaje.sintactico.lalr.Remove;
@@ -22,7 +23,7 @@ import java.util.List;
  * @author mari2bar
  */
 public class LALR implements Serializable {
-
+    
     private List<IrA> tabla, ira;
     private final List<I> herradura;
     public List<I> eliminados;
@@ -30,7 +31,7 @@ public class LALR implements Serializable {
     private final int terminal, noterminales;
     private final List<IrAN> optimizado;
     private final ListaProducciones prod;
-
+    
     public LALR(List<I> herradura, int terminal, int noterminales, ListaProducciones prod) {
         this.tabla = new ArrayList<>(prod.getTabla());
         this.herradura = new ArrayList<>(herradura);
@@ -40,46 +41,36 @@ public class LALR implements Serializable {
         this.prod = prod;
         this.optimizado = new ArrayList<>();
     }
-
+    
     public void realizarirA() {
         this.tabla = new ArrayList<>();
         for (IrA irA : ira) {
             tabla.add(new IrA(irA));
         }
     }
-
+    
     public void realizarirA2() {
         this.ira = new ArrayList<>();
         for (IrA irA : tabla) {
             ira.add(new IrA(irA));
         }
     }
-
+    
     public void analizarLALR() {
         this.realizarirA2();
         int i = 0;
-        this.realizarWhile(i);
-        if (this.realizarTabla()) {
-            for (I eliminado : herradura) {
-                eliminado.setId(eliminado.getId2());
-            }
-            for (Terminal terminale : prod.getTerminales()) {
-                System.out.print("|" + terminale + "|");
-            }
-            System.out.print("|$|");
-            for (NoTerminal noterminal : prod.getNoterminales()) {
-                System.out.print("|" + noterminal + "|");
-            }
-            System.out.println("");
-            for (int j = 0; j < tablaTransicion.length; j++) {
-                for (OperacionSintactica operacionSintactica : tablaTransicion[j]) {
-                    System.out.print("|" + operacionSintactica + "|");
+        try {
+            this.realizarWhile(i);
+            if (this.realizarTabla()) {
+                for (I eliminado : herradura) {
+                    eliminado.setId(eliminado.getId2());
                 }
-                System.out.println("");
             }
+        } catch (Exception e) {
+            ErrorSintactico.errorGeneral(e.getMessage());
         }
     }
-
+    
     public void realizarWhile(int f) {
         try {
             int i = f;
@@ -118,10 +109,10 @@ public class LALR implements Serializable {
                 i++;
             }
         } catch (Exception e) {
-            System.out.println(e);
+            ErrorSintactico.errorGeneral(e.getMessage());
         }
     }
-
+    
     public boolean realizarWhilep(int f) {
         int i = f;
         while (i < eliminados.size()) {
@@ -154,7 +145,7 @@ public class LALR implements Serializable {
         }
         return false;
     }
-
+    
     public boolean realizarTabla() {
         for (int j = 0; j < eliminados.size(); j++) {
             eliminados.get(j).setId2(j + 1);
@@ -166,7 +157,7 @@ public class LALR implements Serializable {
             return false;
         }
     }
-
+    
     public void remplazarDestinos(I a, I r) {
         for (IrA irA : ira) {
             if (irA.getDestino().equals(a)) {
@@ -174,7 +165,7 @@ public class LALR implements Serializable {
             }
         }
     }
-
+    
     public void remplazarPrimeros(I a, I r) {
         for (IrA irA : ira) {
             if (irA.getInicial().equals(a)) {
@@ -189,7 +180,7 @@ public class LALR implements Serializable {
             }
         }*/
     }
-
+    
     public boolean realizarGotoShift() {
         for (IrA ir : ira) {
             boolean tr = true;
@@ -224,7 +215,7 @@ public class LALR implements Serializable {
         }
         return true;
     }
-
+    
     public OperacionSintactica realizarOperacion(IrA ir, boolean terminal) {
         if (terminal) {
             Shift s = new Shift(ir);
@@ -234,7 +225,7 @@ public class LALR implements Serializable {
             return g;
         }
     }
-
+    
     public boolean realizarRemove() {
         for (I i : eliminados) {
             List<Remove> r = i.verRemoves();
@@ -248,6 +239,8 @@ public class LALR implements Serializable {
                     this.tablaTransicion[i.getId2() - 1][f[0]] = remove;
                 } else if (op instanceof Shift && i.getNivel() <= f[1]) {
                     this.tablaTransicion[i.getId() - 1][f[0]] = remove;
+                } else if (op instanceof Remove) {
+                    return false;
                 }/* else {
                     System.out.println(remove);
                     System.out.println(f);
@@ -258,7 +251,7 @@ public class LALR implements Serializable {
         }
         return true;
     }
-
+    
     public OperacionSintactica[][] getTablaTransicion() {
         return tablaTransicion;
     }

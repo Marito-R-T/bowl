@@ -37,6 +37,7 @@ Number = ({OneNine}|{cero})
 <YYINITIAL> ("//")(.)*("\n") {/*NO PRESTAR ATENCION*/}
 /* Palabras Reservadas */
 
+<YYINITIAL> ("import") {return new Symbol(SintaxisLenguajesSym.imp, yycolumn, yyline, yytext());}
 <YYINITIAL> ("version") {return new Symbol(SintaxisLenguajesSym.version, yycolumn, yyline, yytext());}
 <YYINITIAL> ("terminal") {return new Symbol(SintaxisLenguajesSym.term, yycolumn, yyline, yytext());}
 <YYINITIAL> ("nombre") {return new Symbol(SintaxisLenguajesSym.nom, yycolumn, yyline, yytext());}
@@ -88,7 +89,7 @@ Number = ({OneNine}|{cero})
 <YYINITIAL> {letrasma}+ {return new Symbol(SintaxisLenguajesSym.idn, yycolumn, yyline, yytext());}
 <YYINITIAL> {Number} {return new Symbol(SintaxisLenguajesSym.number, yycolumn, yyline, yytext());}
 
-<YYINITIAL> ({letrasmi}|{letrasma})({letrasmi}|{letrasma}|{Number})* {return new Symbol(SintaxisLenguajesSym.id, yycolumn, yyline, yytext());}
+<YYINITIAL> ({letrasmi}|{letrasma})({letrasmi}|{letrasma}|"_"|{Number})* {return new Symbol(SintaxisLenguajesSym.id, yycolumn, yyline, yytext());}
 <YYINITIAL> ("\"")(.)+("\"") {return new Symbol(SintaxisLenguajesSym.str, yycolumn, yyline, yytext().substring(1, yytext().length()-1));}
 
 <YYINITIAL> . {return new Symbol(SintaxisLenguajesSym.codigo, yycolumn, yyline, yytext());}
