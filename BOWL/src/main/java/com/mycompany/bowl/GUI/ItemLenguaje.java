@@ -60,7 +60,7 @@ public class ItemLenguaje extends JMenuItem {
         if (bowl != null) {
             bowl.setSeleccionado(this);
             bowl.getLblSeleccionado().setText("Lenguaje Seleccionado: " + this.lenguaje.getInfo().getNombre() + "    versión: " + this.lenguaje.getInfo().getVersion()
-                    + "   ext: " + this.lenguaje.getInfo().getExtension()+ "   autor: " + this.lenguaje.getInfo().getAutor());
+                    + "   ext: " + this.lenguaje.getInfo().getExtension() + "   autor: " + this.lenguaje.getInfo().getAutor());
         }
     }
 
@@ -70,12 +70,16 @@ public class ItemLenguaje extends JMenuItem {
                     == JOptionPane.OK_OPTION) {
                 bowl.getMenuLenguajes().remove(this.hermano);
                 bowl.getMenuBorrar().remove(this);
+                if (bowl.getLblSeleccionado().getText().equals("Lenguaje Seleccionado: " + this.lenguaje.getInfo().getNombre() + "    versión: " + this.lenguaje.getInfo().getVersion()
+                        + "   ext: " + this.lenguaje.getInfo().getExtension() + "   autor: " + this.lenguaje.getInfo().getAutor())) {
+                    bowl.getLblSeleccionado().setText("");
+                }
                 File file = new File(this.getClass().getResource("/").getPath() + "lenguajes/" + lenguaje.getInfo().getNombre() + ".len");
                 GuardarLenguaje.eliminar(new File(this.getClass().getResource("/").getPath() + "lenguajes/"), file);
             }
         }
     }
-    
+
     public void cambiarLenguaje(Lenguaje lenguaje) {
         this.lenguaje = lenguaje;
         hermano.setLenguaje(lenguaje);

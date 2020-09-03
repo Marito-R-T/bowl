@@ -17,32 +17,32 @@ import java_cup.runtime.Symbol;
 public class ErrorSintactico {
 
     public static void informarError(Symbol sym) {
-        BowlGUI.txtTerminal.append("Error Sintactico en la letra: " + sym.value + "linea: "  + (sym.right + 1) + "    columna: " + (sym.left + 1) + "\n");
+        BowlGUI.txtTerminal.append("Error Sintactico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
     }
 
     public static void errorLexico(Symbol sym) {
-        BowlGUI.txtTerminal.append("Error Lexico en la letra: " + sym.value + "linea: "  + (sym.right + 1) + "    columna: " + (sym.left + 1) + "\n");
+        BowlGUI.txtTerminal.append("Error Lexico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
     }
 
     public static void errorToken(Token tok) {
-        BowlGUI.txtTerminal.append("Error Lexico en la letra: " + tok.getToken() + "linea: "  + (tok.getLine() + 1) + "    columna: " + (tok.getColumn() + 1) + "\n");
+        BowlGUI.txtTerminal.append("Error Lexico en la letra: " + tok.getToken() + "   <linea>: "  + (tok.getLine() + 1) + "    <columna>: " + (tok.getColumn() + 1) + "\n");
     }
 
     public static void errorTokenSintactico(Token tok) {
-        BowlGUI.txtTerminal.append("Error Sintactico en la letra: " + tok.getToken() + "linea: "  + (tok.getLine() + 1) + "    columna: " + (tok.getColumn() + 1) + "\n");
+        BowlGUI.txtTerminal.append("Error Sintactico en la letra: " + tok.getToken() + "   <linea>: "  + (tok.getLine() + 1) + "    <columna>: " + (tok.getColumn() + 1) + "\n");
     }
 
 
     public static void errorProduccion(NoTerminal p, String s) {
-        BowlGUI.txtTerminal.append("Error en la produccion: " + p.toString() + " error: " + s + "\n");
+        BowlGUI.txtTerminal.append("Error en la produccion: " + p.toString() + "  <error>: " + s + "\n");
     }
     
     public static void errorNoTerminal(Symbol sym) {
-        BowlGUI.txtTerminal.append("Error Lexico en la letra: " + sym.value + "linea: "  + (sym.right + 1) + "    columna: " + (sym.left + 1) + "\n");
+        BowlGUI.txtTerminal.append("Error Lexico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "    <columna>: " + (sym.left + 1) + "\n");
     }
     
     public static void errorTerminal(Symbol sym) {
-        BowlGUI.txtTerminal.append("Error Lexico en la letra: " + sym.value + "linea: "  + (sym.right + 1) + "    columna: " + (sym.left + 1) + "\n");
+        BowlGUI.txtTerminal.append("Error Lexico en la letra: " + sym.value + "   <linea>: "  + (sym.right + 1) + "   <columna>: " + (sym.left + 1) + "\n");
     }
     
     public static void errorCodigo(String s) {
